@@ -1,19 +1,25 @@
 package org.ndts.optalgj;
 
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.RangeSlider;
 
 public class MainApplicationController {
+	// region Constants
 	private static final String MIN_PREFIX = "Min: ";
 	private static final String MAX_PREFIX = "Max: ";
+	// endregion
+
+	// region @FXML Attributes
 	@FXML
 	public Canvas canvas;
 	@FXML
-	public Button generateInstancesButton;
+	public Button generateInstances;
 	@FXML
 	public ToggleButton startStopButton;
 	@FXML
@@ -35,6 +41,12 @@ public class MainApplicationController {
 	@FXML
 	public Spinner<Integer> rectangleCount;
 	@FXML
+	public TableView<Rectangle> instanceTable;
+	@FXML
+	public TableColumn<Rectangle, Integer> widthTableColumn;
+	@FXML
+	public TableColumn<Rectangle, Integer> heightTableColumn;
+	@FXML
 	public ChoiceBox<AlgorithmVariant> algorithmVariantChoice;
 	@FXML
 	public ChoiceBox<LocalNeighborhoodVariant> localNeighborhoodVariant;
@@ -48,17 +60,41 @@ public class MainApplicationController {
 	public Label boxCountInfo;
 	@FXML
 	public Label spaceInfo;
+	@FXML
+	public VBox drawer;
+	// endregion
 
-	public void onGenerateInstances(ActionEvent actionEvent) {
-		// TODO put together state
-		// TODO kick off instance generation
+	public void onGenerateInstances() {
+		instanceTable.setItems(FXCollections.observableArrayList(
+						InstanceGenerator.generateInstances(
+								rectangleCount.getValue(),
+								(int) rectangleWidthRange.getLowValue(),
+								(int) rectangleWidthRange.getHighValue(),
+								(int) rectangleHeightRange.getLowValue(),
+								(int) rectangleHeightRange.getHighValue()
+						)
+				)
+		);
 	}
 
+	private void onStart() {
+		// TODO decide which algorithm to run
+		// TODO generate instances if there are none
+		// TODO start algorithm (on separate thread?)
+	}
+
+	private void onStop() {
+		// TODO stop current run, if !newValue
+	}
+
+	// region Initialize
 	@FXML
 	public void initialize() {
 		initializeInstanceManagement();
+		initializeInstanceInspector();
 		initializeAlgorithmNeighborhood();
 		initializeRun();
+		initializeCanvas();
 	}
 
 	private void initializeInstanceManagement() {
@@ -94,6 +130,11 @@ public class MainApplicationController {
 		);
 	}
 
+	private void initializeInstanceInspector() {
+		widthTableColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().width()).asObject());
+		heightTableColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().height()).asObject());
+	}
+
 	private void initializeAlgorithmNeighborhood() {
 		localNeighborhoodVariant.visibleProperty().bind(
 				Bindings.createBooleanBinding(
@@ -118,5 +159,20 @@ public class MainApplicationController {
 		startStopButton.textProperty().bind(
 				Bindings.when(startStopButton.selectedProperty()).then("Stop").otherwise("Start")
 		);
+		startStopButton.selectedProperty().addListener(
+				(observableValue, oldValue, newValue) -> {
+					if (!oldValue && newValue) {
+						onStart();
+					} else if (oldValue && !newValue) {
+						onStop();
+					}
+				}
+		);
 	}
+
+	private void initializeCanvas() {
+		canvas.heightProperty().bind(drawer.heightProperty());
+		canvas.widthProperty().bind(drawer.widthProperty().subtract(drawer.getHeight()));
+	}
+	// endregion
 }
