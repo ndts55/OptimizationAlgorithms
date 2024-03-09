@@ -8,6 +8,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainApplication extends Application {
+	public static void main(String[] args) {
+		launch();
+	}
+
 	@Override
 	public void start(Stage stage) throws IOException {
 		var fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
@@ -19,9 +23,5 @@ public class MainApplication extends Application {
 		stage.setTitle("Optimization Algorithms");
 		stage.setScene(scene);
 		stage.show();
-	}
-
-	public static void main(String[] args) {
-		launch();
 	}
 }

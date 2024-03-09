@@ -76,7 +76,7 @@
             <TitledPane text="Algorithm Settings" prefWidth="Infinity">
                 <VBox prefWidth="Infinity">
                     <Label text="Solve Method" prefWidth="Infinity"/>
-                    <ChoiceBox fx:id="algorithmVariantChoice" maxWidth="Infinity">
+                    <ChoiceBox fx:id="algorithmVariant" maxWidth="Infinity">
                         <AlgorithmVariant fx:constant="Local"/>
                         <AlgorithmVariant fx:constant="Greedy"/>
                     </ChoiceBox>

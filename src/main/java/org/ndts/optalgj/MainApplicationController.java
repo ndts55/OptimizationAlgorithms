@@ -47,7 +47,7 @@ public class MainApplicationController {
 	@FXML
 	public TableColumn<Rectangle, Integer> heightTableColumn;
 	@FXML
-	public ChoiceBox<AlgorithmVariant> algorithmVariantChoice;
+	public ChoiceBox<AlgorithmVariant> algorithmVariant;
 	@FXML
 	public ChoiceBox<LocalNeighborhoodVariant> localNeighborhoodVariant;
 	@FXML
@@ -65,26 +65,26 @@ public class MainApplicationController {
 	// endregion
 
 	public void onGenerateInstances() {
-		instanceTable.setItems(FXCollections.observableArrayList(
-						InstanceGenerator.generateInstances(
-								rectangleCount.getValue(),
-								(int) rectangleWidthRange.getLowValue(),
-								(int) rectangleWidthRange.getHighValue(),
-								(int) rectangleHeightRange.getLowValue(),
-								(int) rectangleHeightRange.getHighValue()
-						)
-				)
-		);
+		instanceTable.setItems(FXCollections.observableArrayList(InstanceGenerator.generateInstances(rectangleCount.getValue(), (int) rectangleWidthRange.getLowValue(), (int) rectangleWidthRange.getHighValue(), (int) rectangleHeightRange.getLowValue(), (int) rectangleHeightRange.getHighValue())));
 	}
 
 	private void onStart() {
-		// TODO decide which algorithm to run
-		// TODO generate instances if there are none
-		// TODO start algorithm (on separate thread?)
+		if (instanceTable.getItems().isEmpty()) {
+			onGenerateInstances();
+		}
+		var algoVariant = algorithmVariant.getValue();
+		switch (algoVariant) {
+			case Local ->
+					AlgorithmRunner.startAlgorithm(algoVariant, localNeighborhoodVariant.getValue(), instanceTable.getItems());
+			case Greedy ->
+					AlgorithmRunner.startAlgorithm(algoVariant, greedyNeighborhoodVariant.getValue(), instanceTable.getItems());
+		}
+		// TODO start timer
+		// TODO devise a way to track iterations
 	}
 
 	private void onStop() {
-		// TODO stop current run, if !newValue
+		AlgorithmRunner.stopAlgorithm();
 	}
 
 	// region Initialize
@@ -98,36 +98,11 @@ public class MainApplicationController {
 	}
 
 	private void initializeInstanceManagement() {
-		maxBoxLengthInfo.textProperty().bind(
-				Bindings.createStringBinding(
-						() -> MAX_PREFIX + (int) maxBoxLength.getValue(),
-						maxBoxLength.valueProperty()
-				)
-		);
-		minRectangleWidthInfo.textProperty().bind(
-				Bindings.createStringBinding(
-						() -> MIN_PREFIX + (int) rectangleWidthRange.getLowValue(),
-						rectangleWidthRange.lowValueProperty()
-				)
-		);
-		maxRectangleWidthInfo.textProperty().bind(
-				Bindings.createStringBinding(
-						() -> MAX_PREFIX + (int) rectangleWidthRange.getHighValue(),
-						rectangleWidthRange.highValueProperty()
-				)
-		);
-		minRectangleHeightInfo.textProperty().bind(
-				Bindings.createStringBinding(
-						() -> MIN_PREFIX + (int) rectangleHeightRange.getLowValue(),
-						rectangleHeightRange.lowValueProperty()
-				)
-		);
-		maxRectangleHeightInfo.textProperty().bind(
-				Bindings.createStringBinding(
-						() -> MAX_PREFIX + (int) rectangleHeightRange.getHighValue(),
-						rectangleHeightRange.highValueProperty()
-				)
-		);
+		maxBoxLengthInfo.textProperty().bind(Bindings.createStringBinding(() -> MAX_PREFIX + (int) maxBoxLength.getValue(), maxBoxLength.valueProperty()));
+		minRectangleWidthInfo.textProperty().bind(Bindings.createStringBinding(() -> MIN_PREFIX + (int) rectangleWidthRange.getLowValue(), rectangleWidthRange.lowValueProperty()));
+		maxRectangleWidthInfo.textProperty().bind(Bindings.createStringBinding(() -> MAX_PREFIX + (int) rectangleWidthRange.getHighValue(), rectangleWidthRange.highValueProperty()));
+		minRectangleHeightInfo.textProperty().bind(Bindings.createStringBinding(() -> MIN_PREFIX + (int) rectangleHeightRange.getLowValue(), rectangleHeightRange.lowValueProperty()));
+		maxRectangleHeightInfo.textProperty().bind(Bindings.createStringBinding(() -> MAX_PREFIX + (int) rectangleHeightRange.getHighValue(), rectangleHeightRange.highValueProperty()));
 	}
 
 	private void initializeInstanceInspector() {
@@ -136,38 +111,24 @@ public class MainApplicationController {
 	}
 
 	private void initializeAlgorithmNeighborhood() {
-		localNeighborhoodVariant.visibleProperty().bind(
-				Bindings.createBooleanBinding(
-						() -> algorithmVariantChoice.getValue() == AlgorithmVariant.Local,
-						algorithmVariantChoice.valueProperty()
-				)
-		);
+		localNeighborhoodVariant.visibleProperty().bind(Bindings.createBooleanBinding(() -> algorithmVariant.getValue() == AlgorithmVariant.Local, algorithmVariant.valueProperty()));
 		localNeighborhoodVariant.managedProperty().bind(localNeighborhoodVariant.visibleProperty());
-		greedyNeighborhoodVariant.visibleProperty().bind(
-				Bindings.createBooleanBinding(
-						() -> algorithmVariantChoice.getValue() == AlgorithmVariant.Greedy,
-						algorithmVariantChoice.valueProperty()
-				)
-		);
+		greedyNeighborhoodVariant.visibleProperty().bind(Bindings.createBooleanBinding(() -> algorithmVariant.getValue() == AlgorithmVariant.Greedy, algorithmVariant.valueProperty()));
 		greedyNeighborhoodVariant.managedProperty().bind(greedyNeighborhoodVariant.visibleProperty());
-		algorithmVariantChoice.getSelectionModel().selectFirst();
+		algorithmVariant.getSelectionModel().selectFirst();
 		localNeighborhoodVariant.getSelectionModel().selectFirst();
 		greedyNeighborhoodVariant.getSelectionModel().selectFirst();
 	}
 
 	private void initializeRun() {
-		startStopButton.textProperty().bind(
-				Bindings.when(startStopButton.selectedProperty()).then("Stop").otherwise("Start")
-		);
-		startStopButton.selectedProperty().addListener(
-				(observableValue, oldValue, newValue) -> {
-					if (!oldValue && newValue) {
-						onStart();
-					} else if (oldValue && !newValue) {
-						onStop();
-					}
-				}
-		);
+		startStopButton.textProperty().bind(Bindings.when(startStopButton.selectedProperty()).then("Stop").otherwise("Start"));
+		startStopButton.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+			if (!oldValue && newValue) {
+				onStart();
+			} else if (oldValue && !newValue) {
+				onStop();
+			}
+		});
 	}
 
 	private void initializeCanvas() {

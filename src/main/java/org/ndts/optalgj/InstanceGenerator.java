@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class InstanceGenerator {
 
+	private static final Random random = new Random();
+
 	public static List<Rectangle> generateInstances(int count, int minWidth, int maxWidth, int minHeight, int maxHeight) {
 		var result = new ArrayList<Rectangle>(count);
 		for (int i = 0; i < count; i++) {
@@ -13,8 +15,6 @@ public class InstanceGenerator {
 		}
 		return result;
 	}
-
-	private static final Random random = new Random();
 
 	private static int nextInt(int min, int max) {
 		return random.nextInt(max - min + 1) + min;
