@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.RangeSlider?>
+<?import org.ndts.optalgj.*?>
+<?import java.lang.Integer?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.ndts.optalgj.MainApplicationController" prefHeight="1200" prefWidth="2000">
+    <left>
+        <VBox prefWidth="300" prefHeight="Infinity">
+            <TitledPane text="Instance Management" prefWidth="Infinity">
+                <VBox prefWidth="Infinity">
+                    <TitledPane text="Box" prefWidth="Infinity">
+                        <VBox>
+                            <HBox prefWidth="Infinity">
+                                <Label text="Length" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <VBox HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <Label fx:id="maxBoxLengthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            </HBox>
+                            <Slider fx:id="maxBoxLength" min="1" max="30" snapToTicks="true" majorTickUnit="1"
+                                    blockIncrement="1" showTickMarks="true" minorTickCount="0" value="7"/>
+                        </VBox>
+                    </TitledPane>
+                    <TitledPane text="Rectangle" prefWidth="Infinity">
+                        <VBox>
+                            <HBox prefWidth="Infinity">
+                                <Label text="Height" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <Label fx:id="minRectangleHeightInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <Label fx:id="maxRectangleHeightInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            </HBox>
+                            <RangeSlider fx:id="rectangleHeightRange" snapToTicks="true" majorTickUnit="1" min="1"
+                                         max="30"
+                                         blockIncrement="1" showTickMarks="true" minorTickCount="0" prefWidth="Infinity"
+                                         lowValue="1" highValue="7"/>
+                            <HBox prefWidth="Infinity">
+                                <Label text="Width" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <Label fx:id="minRectangleWidthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <Label fx:id="maxRectangleWidthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            </HBox>
+                            <RangeSlider fx:id="rectangleWidthRange" snapToTicks="true" majorTickUnit="1"
+                                         blockIncrement="1"
+                                         showTickMarks="true" minorTickCount="0" min="1" max="30" prefWidth="Infinity"
+                                         lowValue="1" highValue="7"/>
+                            <Label text="Count" prefWidth="Infinity"/>
+                            <Spinner fx:id="rectangleCount" prefWidth="Infinity">
+                                <valueFactory>
+                                    <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" initialValue="10"
+                                                                                    amountToStepBy="1">
+                                        <max>
+                                            <Integer fx:constant="MAX_VALUE"/>
+                                        </max>
+                                    </SpinnerValueFactory.IntegerSpinnerValueFactory>
+                                </valueFactory>
+                            </Spinner>
+                        </VBox>
+                    </TitledPane>
+                    <Button fx:id="generateInstancesButton" text="Generate Instances" onAction="#onGenerateInstances"
+                            maxWidth="Infinity"/>
+                    <!-- TODO add some sort of instance inspector -->
+                </VBox>
+            </TitledPane>
+            <TitledPane text="Algorithm + Neighbourhood" prefWidth="Infinity">
+                <VBox prefWidth="Infinity">
+                    <ChoiceBox fx:id="algorithmVariantChoice" maxWidth="Infinity">
+                        <AlgorithmVariant fx:constant="Local"/>
+                        <AlgorithmVariant fx:constant="Greedy"/>
+                    </ChoiceBox>
+                    <ChoiceBox fx:id="localNeighborhoodVariant" maxWidth="Infinity">
+                        <LocalNeighborhoodVariant fx:constant="Geometric"/>
+                        <LocalNeighborhoodVariant fx:constant="Rules"/>
+                        <LocalNeighborhoodVariant fx:constant="Overlap"/>
+                    </ChoiceBox>
+                    <ChoiceBox fx:id="greedyNeighborhoodVariant" maxWidth="Infinity">
+                        <GreedyNeighborhoodVariant fx:constant="VariantA"/>
+                        <GreedyNeighborhoodVariant fx:constant="VariantB"/>
+                    </ChoiceBox>
+                </VBox>
+            </TitledPane>
+            <TitledPane text="Run" prefWidth="Infinity">
+                <VBox prefWidth="Infinity">
+                    <ToggleButton fx:id="startStopButton" text="Start" maxWidth="Infinity"/>
+                    <HBox prefWidth="Infinity">
+                        <Label text="Iteration" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <Label fx:id="iterationCountInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity" text="0000"/>
+                    </HBox>
+                    <HBox prefWidth="Infinity">
+                        <Label text="Elapsed Time (s)" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <Label fx:id="elapsedTimeInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity" text="0000"/>
+                    </HBox>
+                    <HBox prefWidth="Infinity">
+                        <Label text="Box Count" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <Label fx:id="boxCountInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity" text="0000"/>
+                    </HBox>
+                    <HBox prefWidth="Infinity">
+                        <Label text="Space" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <Label fx:id="spaceInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity" text="0000"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+        </VBox>
+    </left>
+    <center>
+        <Canvas fx:id="canvas"/>
+    </center>
+    <bottom>
+    </bottom>
+</BorderPane>
