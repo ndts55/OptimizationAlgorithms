@@ -61,7 +61,7 @@
                 </VBox>
             </TitledPane>
             <TitledPane text="Instance Inspector">
-                <ScrollPane fitToWidth="true" maxHeight="500">
+                <ScrollPane fitToWidth="true" maxHeight="300">
                     <TableView fx:id="instanceTable">
                         <columns>
                             <TableColumn fx:id="widthTableColumn" text="Width"/>
