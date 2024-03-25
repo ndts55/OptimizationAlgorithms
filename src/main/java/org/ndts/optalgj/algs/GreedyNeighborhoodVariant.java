@@ -1,4 +1,4 @@
-package org.ndts.optalgj;
+package org.ndts.optalgj.algs;
 
 public enum GreedyNeighborhoodVariant {
 	VariantA,

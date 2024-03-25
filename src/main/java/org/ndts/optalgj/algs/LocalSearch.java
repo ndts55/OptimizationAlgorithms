@@ -1,4 +1,4 @@
-package org.ndts.optalgj;
+package org.ndts.optalgj.algs;
 
 public class LocalSearch<Input, Solution> implements OptimizationAlgorithm<Input, Solution> {
 	private final FeasibleSolutions<Input, Solution> feasibleSolutions;
@@ -11,17 +11,18 @@ public class LocalSearch<Input, Solution> implements OptimizationAlgorithm<Input
 		this.neighborhood = neighborhood;
 	}
 
-	public Solution run(Input input) {
+	@Override
+	public Solution apply(Input input) {
 		var currentSolution = feasibleSolutions.arbitrarySolution(input);
 		do {
-			var neighbors = neighborhood.apply(currentSolution);
+			var neighbors = neighborhood.neighborhood(currentSolution);
 			if (neighbors.isEmpty()) {
 				break;
 			}
 			var minSolution = currentSolution;
-			var minObjective = objectiveFunction.apply(minSolution);
+			var minObjective = objectiveFunction.obj(minSolution);
 			for (var neighborSolution : neighbors) {
-				var neighborObjective = objectiveFunction.apply(neighborSolution);
+				var neighborObjective = objectiveFunction.obj(neighborSolution);
 				if (minObjective > neighborObjective) {
 					minSolution = neighborSolution;
 					minObjective = neighborObjective;

@@ -8,6 +8,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.RangeSlider;
+import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;
+import org.ndts.optalgj.algs.LocalNeighborhoodVariant;
+import org.ndts.optalgj.problems.rect.Rectangle;
 
 public class MainApplicationController {
 	// region Constants
@@ -75,9 +78,9 @@ public class MainApplicationController {
 		var algoVariant = algorithmVariant.getValue();
 		switch (algoVariant) {
 			case Local ->
-					AlgorithmRunner.startAlgorithm(algoVariant, localNeighborhoodVariant.getValue(), instanceTable.getItems());
+				AlgorithmRunner.startAlgorithm(algoVariant, localNeighborhoodVariant.getValue(), instanceTable.getItems());
 			case Greedy ->
-					AlgorithmRunner.startAlgorithm(algoVariant, greedyNeighborhoodVariant.getValue(), instanceTable.getItems());
+				AlgorithmRunner.startAlgorithm(algoVariant, greedyNeighborhoodVariant.getValue(), instanceTable.getItems());
 		}
 		// TODO start timer
 		// TODO devise a way to track iterations

@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.RangeSlider?>
-<?import org.ndts.optalgj.*?>
+<?import org.ndts.optalgj.AlgorithmVariant?>
+<?import org.ndts.optalgj.algs.*?>
 <?import java.lang.Integer?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.ndts.optalgj.MainApplicationController" prefHeight="1200" prefWidth="2000">
@@ -61,17 +62,15 @@
                 </VBox>
             </TitledPane>
             <TitledPane text="Instance Inspector">
-                <ScrollPane fitToWidth="true" maxHeight="300">
-                    <TableView fx:id="instanceTable">
-                        <columns>
-                            <TableColumn fx:id="widthTableColumn" text="Width"/>
-                            <TableColumn fx:id="heightTableColumn" text="Height"/>
-                        </columns>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
-                        </columnResizePolicy>
-                    </TableView>
-                </ScrollPane>
+                <TableView fx:id="instanceTable" maxHeight="300">
+                    <columns>
+                        <TableColumn fx:id="widthTableColumn" text="Width"/>
+                        <TableColumn fx:id="heightTableColumn" text="Height"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                    </columnResizePolicy>
+                </TableView>
             </TitledPane>
             <TitledPane text="Algorithm Settings" prefWidth="Infinity">
                 <VBox prefWidth="Infinity">

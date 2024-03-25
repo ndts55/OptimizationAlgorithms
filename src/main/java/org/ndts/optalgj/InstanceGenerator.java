@@ -1,5 +1,7 @@
 package org.ndts.optalgj;
 
+import org.ndts.optalgj.problems.rect.Rectangle;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
