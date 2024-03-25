@@ -22,10 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SimpleSolutionConstructor implements FeasibleSolutions<Input, List<PositionedRectangle>> {
+public class SimpleSolutionConstructor implements FeasibleSolutions<Input, Output> {
 	@Override
-	public List<PositionedRectangle> arbitrarySolution(Input rectangleInput) {
+	public Output arbitrarySolution(Input rectangleInput) {
 		// simplest valid solution is to put each rectangle in its own box
-		return rectangleInput.rectangles().stream().map(PositionedRectangle::new).collect(Collectors.toCollection(() -> new ArrayList<>(rectangleInput.rectangles().size())));
+		var boxes = rectangleInput.rectangles().stream().map(rectangle -> (List<PositionedRectangle>) new ArrayList<PositionedRectangle>(1) {{
+			add(new PositionedRectangle(rectangle));
+		}}).collect(Collectors.toCollection(() -> new ArrayList<>(rectangleInput.rectangles().size())));
+		return new Output(boxes);
 	}
 }

@@ -1,4 +1,4 @@
-package org.ndts.optalgj;
+package org.ndts.optalgj.gui;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -6,21 +6,28 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.RangeSlider;
+import org.ndts.optalgj.AlgorithmRunner;
+import org.ndts.optalgj.algs.AlgorithmVariant;
 import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;
 import org.ndts.optalgj.algs.LocalNeighborhoodVariant;
+import org.ndts.optalgj.problems.rect.Input;
 import org.ndts.optalgj.problems.rect.Rectangle;
+import org.ndts.optalgj.problems.rect.SimpleSolutionConstructor;
+
+import static org.ndts.optalgj.gui.Utils.drawOutput;
+
 
 public class MainApplicationController {
 	// region Constants
 	private static final String MIN_PREFIX = "Min: ";
 	private static final String MAX_PREFIX = "Max: ";
-	// endregion
-
 	// region @FXML Attributes
 	@FXML
 	public Canvas canvas;
+	// endregion
 	@FXML
 	public Button generateInstances;
 	@FXML
@@ -65,10 +72,19 @@ public class MainApplicationController {
 	public Label spaceInfo;
 	@FXML
 	public VBox drawer;
+	@FXML
+	public BorderPane rootElement;
+	double CANVAS_SCALE = 10.0;
 	// endregion
 
 	public void onGenerateInstances() {
 		instanceTable.setItems(FXCollections.observableArrayList(InstanceGenerator.generateInstances(rectangleCount.getValue(), (int) rectangleWidthRange.getLowValue(), (int) rectangleWidthRange.getHighValue(), (int) rectangleHeightRange.getLowValue(), (int) rectangleHeightRange.getHighValue())));
+		drawTestCanvas();
+	}
+
+	private void drawTestCanvas() {
+		var output = new SimpleSolutionConstructor().arbitrarySolution(new Input(instanceTable.getItems().stream().toList(), ((int) maxBoxLength.getValue())));
+		drawOutput(output, canvas, maxBoxLength.getValue(), CANVAS_SCALE);
 	}
 
 	private void onStart() {
@@ -136,7 +152,7 @@ public class MainApplicationController {
 
 	private void initializeCanvas() {
 		canvas.heightProperty().bind(drawer.heightProperty());
-		canvas.widthProperty().bind(drawer.widthProperty().subtract(drawer.getHeight()));
+		canvas.widthProperty().bind(rootElement.widthProperty().subtract(drawer.widthProperty()));
 	}
 	// endregion
 }

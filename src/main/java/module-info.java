@@ -11,4 +11,6 @@ module org.ndts.optalgj {
 	opens org.ndts.optalgj.algs to javafx.fxml;
 	exports org.ndts.optalgj.problems.rect;
 	opens org.ndts.optalgj.problems.rect to javafx.fxml;
+	exports org.ndts.optalgj.gui;
+	opens org.ndts.optalgj.gui to javafx.fxml;
 }

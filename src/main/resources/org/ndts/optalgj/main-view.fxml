@@ -4,11 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.RangeSlider?>
-<?import org.ndts.optalgj.AlgorithmVariant?>
 <?import org.ndts.optalgj.algs.*?>
 <?import java.lang.Integer?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.ndts.optalgj.MainApplicationController" prefHeight="1200" prefWidth="2000">
+            fx:controller="org.ndts.optalgj.gui.MainApplicationController" prefHeight="1200" prefWidth="2000"
+            fx:id="rootElement">
     <left>
         <VBox fx:id="drawer" prefWidth="300" prefHeight="Infinity">
             <TitledPane text="Instance Settings" prefWidth="Infinity">

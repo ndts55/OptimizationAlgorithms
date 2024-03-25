@@ -1,5 +1,6 @@
 package org.ndts.optalgj;
 
+import org.ndts.optalgj.algs.AlgorithmVariant;
 import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;
 import org.ndts.optalgj.algs.LocalNeighborhoodVariant;
 import org.ndts.optalgj.problems.rect.Rectangle;

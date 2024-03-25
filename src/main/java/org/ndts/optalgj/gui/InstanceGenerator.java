@@ -1,4 +1,4 @@
-package org.ndts.optalgj;
+package org.ndts.optalgj.gui;
 
 import org.ndts.optalgj.problems.rect.Rectangle;
 

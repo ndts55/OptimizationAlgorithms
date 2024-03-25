@@ -13,9 +13,9 @@ Prozentsatz, und Verletzungen werden hart in der Zielfunktion bestraft. Am Ende 
 dafür sorgen, dass schlussendlich eine garantiert überlappungsfreie Lösung entsteht.
  */
 
-public class OverlapNeighborhood implements Neighborhood<List<PositionedRectangle>> {
+public class OverlapNeighborhood implements Neighborhood<Output> {
 	@Override
-	public List<List<PositionedRectangle>> neighborhood(List<PositionedRectangle> positionedRectangleList) {
+	public List<Output> neighborhood(Output positionedRectangleList) {
 		throw new UnsupportedOperationException();
 	}
 }

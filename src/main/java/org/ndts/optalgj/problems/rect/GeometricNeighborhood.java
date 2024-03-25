@@ -13,9 +13,9 @@ eigentlich zu minimierende Zielfunktion nicht besser ist, der Nachbar aber nach 
 Schritt zu belohnen, bei dem die Anzahl Rechtecke in einer Box, in der ohnehin nur wenige Rechtecke
 in dieser Box sind, weiter verringert wird, auch wenn die Box damit (noch) nicht leer ist.
  */
-public class GeometricNeighborhood implements Neighborhood<List<PositionedRectangle>> {
+public class GeometricNeighborhood implements Neighborhood<Output> {
 	@Override
-	public List<List<PositionedRectangle>> neighborhood(List<PositionedRectangle> positionedRectangles) {
+	public List<Output> neighborhood(Output positionedRectangles) {
 		throw new UnsupportedOperationException();
 	}
 }

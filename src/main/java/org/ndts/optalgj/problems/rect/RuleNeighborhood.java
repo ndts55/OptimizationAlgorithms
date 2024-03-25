@@ -11,9 +11,9 @@ platziert. Als Regel die Nachbarschaft definieren Sie durch kleine Modifikations
 Permutation. Auch hier könnte es sinnvoll sein, Rechtecke in relativ leeren Boxen anderswo in der
 Permutation zu platzieren.
  */
-public class RuleNeighborhood implements Neighborhood<List<PositionedRectangle>> {
+public class RuleNeighborhood implements Neighborhood<Output> {
 	@Override
-	public List<List<PositionedRectangle>> neighborhood(List<PositionedRectangle> positionedRectangles) {
+	public List<Output> neighborhood(Output positionedRectangles) {
 		throw new UnsupportedOperationException();
 	}
 }
