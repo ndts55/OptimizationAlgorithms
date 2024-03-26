@@ -17,9 +17,7 @@ public class MainApplication extends Application {
 		var fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
 		var scene = new Scene(fxmlLoader.load());
 		var stylesheet = MainApplication.class.getResource("style.css");
-		if (stylesheet != null) {
-			scene.getStylesheets().add(stylesheet.toExternalForm());
-		}
+		if (stylesheet != null) scene.getStylesheets().add(stylesheet.toExternalForm());
 		stage.setTitle("Optimization Algorithms");
 		stage.setScene(scene);
 		stage.show();

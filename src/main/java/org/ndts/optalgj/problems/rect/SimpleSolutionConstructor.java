@@ -17,15 +17,17 @@ ist die Anzahl der Boxen, die Sie benötigen, um alle Rechtecke darin zu platzie
 import org.ndts.optalgj.algs.FeasibleSolutions;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class SimpleSolutionConstructor implements FeasibleSolutions<Input, Output> {
 	@Override
 	public Output arbitrarySolution(Input rectangleInput) {
 		// simplest valid solution is to put each rectangle in its own box
-		var boxes = rectangleInput.rectangles().stream().map(rectangle -> new Box(new ArrayList<>(1) {{
-			add(new PositionedRectangle(rectangle));
-		}})).collect(Collectors.toCollection(() -> new ArrayList<>(rectangleInput.rectangles().size())));
+		List<Box> boxes = new ArrayList<>(rectangleInput.rectangles().size());
+		for (var rectangle : rectangleInput.rectangles())
+			boxes.add(new Box(new ArrayList<>(1) {{
+				add(new PositionedRectangle(rectangle));
+			}}));
 		return new Output(rectangleInput.boxLength(), boxes);
 	}
 }

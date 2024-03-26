@@ -9,9 +9,7 @@ public record Output(int boxLength, List<Box> boxes) implements CopyConstructibl
 
 	public Output(final Output output) {
 		this(output.boxLength, new ArrayList<>(output.boxes.size()));
-		for (var box : output.boxes) {
-			boxes.add(new Box(box));
-		}
+		for (var box : output.boxes) boxes.add(new Box(box));
 	}
 
 	@Override
