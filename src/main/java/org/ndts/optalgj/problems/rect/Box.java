@@ -1,13 +1,15 @@
 package org.ndts.optalgj.problems.rect;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public record Box(int length, int totalArea,
-		  List<PositionedRectangle> rectangles) implements Iterable<PositionedRectangle> {
+public record Box(
+	List<PositionedRectangle> rectangles) implements Iterable<PositionedRectangle> {
 
-	public Box(final int length, final List<PositionedRectangle> rectangles) {
-		this(length, length * length, rectangles);
+	public Box(final Box box) {
+		this(new ArrayList<>(box.rectangles.size()));
+		for (var r : box.rectangles) rectangles.add(new PositionedRectangle(r));
 	}
 
 	public int size() {
@@ -40,19 +42,12 @@ public record Box(int length, int totalArea,
 	 */
 	public boolean overlapsExistAt(int index) {
 		final var rectangle = get(index);
-		for (var i = 0; i < size(); i += 1) {
-			if (index != i && rectangle.overlapsWith(get(i))) {
-				return true;
-			}
-		}
+		for (var i = 0; i < size(); i += 1)
+			if (index != i && rectangle.overlapsWith(get(i))) return true;
 		return false;
 	}
 
 	public int occupiedArea() {
 		return rectangles.stream().mapToInt(PositionedRectangle::area).sum();
-	}
-
-	public int freeArea() {
-		return totalArea - occupiedArea();
 	}
 }

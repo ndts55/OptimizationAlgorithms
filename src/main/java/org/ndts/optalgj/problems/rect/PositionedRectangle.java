@@ -8,12 +8,20 @@ public class PositionedRectangle {
 	private int y;
 	private boolean rotated; // without this we'd have to rotate the rectangle properties
 
-	PositionedRectangle(final Rectangle rectangle) {
+	PositionedRectangle(final Rectangle rectangle, final int x, final int y, final boolean rotated) {
 		this.rectangle = rectangle;
-		this.x = 0;
-		this.y = 0;
-		this.rotated = false;
+		this.x = x;
+		this.y = y;
+		this.rotated = rotated;
 		this.area = rectangle.area();
+	}
+
+	PositionedRectangle(final Rectangle rectangle) {
+		this(rectangle, 0, 0, false);
+	}
+
+	PositionedRectangle(final PositionedRectangle positionedRectangle) {
+		this(positionedRectangle.rectangle, positionedRectangle.x, positionedRectangle.y, positionedRectangle.rotated);
 	}
 
 	public boolean overlapsWith(final PositionedRectangle other) {
@@ -26,12 +34,11 @@ public class PositionedRectangle {
 		var r2x = other.x + other.width();
 		var r2y = other.y + other.height();
 		// do not overlap if one rectangle is to the left or above the other
-		return !(l1x > r2x || l2x > r1x || l1y > r2y || l2y > r1y);
+		return !(l1x >= r2x || l2x >= r1x || l1y >= r2y || l2y >= r1y);
 	}
 
-	public double overlapArea(final PositionedRectangle other) {
-		// TODO calculate overlap area between this and other
-		throw new UnsupportedOperationException();
+	public boolean outOfBounds(int boxLength) {
+		return x < 0 || y < 0 || x + width() > boxLength - 1 || y + height() > boxLength - 1;
 	}
 
 	public void rotate() {
@@ -58,19 +65,11 @@ public class PositionedRectangle {
 	}
 
 	public int width() {
-		if (rotated) {
-			return rectangle.height();
-		} else {
-			return rectangle.width();
-		}
+		return rotated ? rectangle.height() : rectangle.width();
 	}
 
 	public int height() {
-		if (rotated) {
-			return rectangle.width();
-		} else {
-			return rectangle.height();
-		}
+		return rotated ? rectangle.width() : rectangle.height();
 	}
 
 	public boolean rotated() {

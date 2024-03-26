@@ -1,5 +1,6 @@
 package org.ndts.optalgj.gui;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -9,25 +10,23 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.RangeSlider;
-import org.ndts.optalgj.AlgorithmRunner;
 import org.ndts.optalgj.algs.AlgorithmVariant;
 import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;
 import org.ndts.optalgj.algs.LocalNeighborhoodVariant;
 import org.ndts.optalgj.problems.rect.Input;
 import org.ndts.optalgj.problems.rect.Rectangle;
-import org.ndts.optalgj.problems.rect.SimpleSolutionConstructor;
 
-import static org.ndts.optalgj.utils.CanvasDrawer.drawOutput;
+import static org.ndts.optalgj.gui.CanvasDrawer.drawOutput;
 
 
 public class MainApplicationController {
 	// region Constants
 	private static final String MIN_PREFIX = "Min: ";
 	private static final String MAX_PREFIX = "Max: ";
+	// endregion
 	// region @FXML Attributes
 	@FXML
 	public Canvas canvas;
-	// endregion
 	@FXML
 	public Button generateInstances;
 	@FXML
@@ -74,43 +73,44 @@ public class MainApplicationController {
 	public VBox drawer;
 	@FXML
 	public BorderPane rootElement;
-	double CANVAS_SCALE = 10.0;
+	// endregion
+	// region Other attributes
+	private SearchService service;
 	// endregion
 
 	public void onGenerateInstances() {
 		instanceTable.setItems(FXCollections.observableArrayList(InstanceGenerator.generateInstances(rectangleCount.getValue(), (int) rectangleWidthRange.getLowValue(), (int) rectangleWidthRange.getHighValue(), (int) rectangleHeightRange.getLowValue(), (int) rectangleHeightRange.getHighValue())));
-		drawTestCanvas();
-	}
-
-	private void drawTestCanvas() {
-		Input input;
-		try {
-			input = new Input(instanceTable.getItems().stream().toList(), ((int) maxBoxLength.getValue()));
-		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
-			return;
-		}
-		var output = new SimpleSolutionConstructor().arbitrarySolution(input);
-		drawOutput(output, canvas, maxBoxLength.getValue(), CANVAS_SCALE);
 	}
 
 	private void onStart() {
-		if (instanceTable.getItems().isEmpty()) {
-			onGenerateInstances();
-		}
+		disableStartStopButton();
+		if (instanceTable.getItems().isEmpty()) onGenerateInstances();
 		var algoVariant = algorithmVariant.getValue();
-		switch (algoVariant) {
-			case Local ->
-				AlgorithmRunner.startAlgorithm(algoVariant, localNeighborhoodVariant.getValue(), instanceTable.getItems());
-			case Greedy ->
-				AlgorithmRunner.startAlgorithm(algoVariant, greedyNeighborhoodVariant.getValue(), instanceTable.getItems());
+		assert service == null || !service.isRunning();
+		Input input;
+		try {
+			input = new Input(instanceTable.getItems().stream().toList(), (int) maxBoxLength.getValue());
+		} catch (IllegalArgumentException iae) {
+			enableStartStopButton();
+			return;
 		}
-		// TODO start timer
-		// TODO devise a way to track iterations
+		service = switch (algoVariant) {
+			case Local -> new SearchService(localNeighborhoodVariant.getValue(), input);
+			case Greedy ->
+				new SearchService(greedyNeighborhoodVariant.getValue(), input);
+		};
+		service.valueProperty().addListener((obs, oldValue, newValue) -> drawOutput(newValue, canvas, input.boxLength()));
+		service.messageProperty().addListener((obs, oldValue, newValue) -> System.out.println(newValue));
+		service.iterationProperty().addListener((obs, oldValue, newValue) -> Platform.runLater(() -> iterationCountInfo.setText(String.valueOf(newValue))));
+		service.start();
+		enableStartStopButton();
 	}
 
 	private void onStop() {
-		AlgorithmRunner.stopAlgorithm();
+		disableStartStopButton();
+		assert service != null;
+		service.cancel();
+		enableStartStopButton();
 	}
 
 	// region Initialize
@@ -149,17 +149,24 @@ public class MainApplicationController {
 	private void initializeRun() {
 		startStopButton.textProperty().bind(Bindings.when(startStopButton.selectedProperty()).then("Stop").otherwise("Start"));
 		startStopButton.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
-			if (!oldValue && newValue) {
-				onStart();
-			} else if (oldValue && !newValue) {
-				onStop();
-			}
+			if (!oldValue && newValue) onStart();
+			else if (oldValue && !newValue) onStop();
 		});
 	}
 
 	private void initializeCanvas() {
 		canvas.heightProperty().bind(drawer.heightProperty());
 		canvas.widthProperty().bind(rootElement.widthProperty().subtract(drawer.widthProperty()));
+	}
+	// endregion
+
+	// region UI utils
+	private void disableStartStopButton() {
+		startStopButton.setDisable(true);
+	}
+
+	private void enableStartStopButton() {
+		startStopButton.setDisable(false);
 	}
 	// endregion
 }

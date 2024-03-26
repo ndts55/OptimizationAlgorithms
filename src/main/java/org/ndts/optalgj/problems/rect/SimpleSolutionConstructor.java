@@ -23,9 +23,9 @@ public class SimpleSolutionConstructor implements FeasibleSolutions<Input, Outpu
 	@Override
 	public Output arbitrarySolution(Input rectangleInput) {
 		// simplest valid solution is to put each rectangle in its own box
-		var boxes = rectangleInput.rectangles().stream().map(rectangle -> new Box(rectangleInput.boxLength(), new ArrayList<>(1) {{
+		var boxes = rectangleInput.rectangles().stream().map(rectangle -> new Box(new ArrayList<>(1) {{
 			add(new PositionedRectangle(rectangle));
 		}})).collect(Collectors.toCollection(() -> new ArrayList<>(rectangleInput.rectangles().size())));
-		return new Output(boxes);
+		return new Output(rectangleInput.boxLength(), boxes);
 	}
 }

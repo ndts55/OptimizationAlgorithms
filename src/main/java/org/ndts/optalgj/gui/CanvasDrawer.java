@@ -1,15 +1,15 @@
-package org.ndts.optalgj.utils;
+package org.ndts.optalgj.gui;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import org.ndts.optalgj.problems.rect.Output;
 
 public class CanvasDrawer {
-	public static void drawOutput(Output output, Canvas canvas, double boxLength, double scale) {
+	private static final double scale = 10.0;
+
+	public static void drawOutput(Output output, Canvas canvas, double boxLength) {
 		var boxes = output.boxes();
-		if (boxes.isEmpty()) {
-			return;
-		}
+		if (boxes.isEmpty()) return;
 		boxLength *= scale;
 		final int maxBoxesPerRow = (int) (canvas.getWidth() / boxLength);
 		var gc = canvas.getGraphicsContext2D();
@@ -24,9 +24,8 @@ public class CanvasDrawer {
 
 			var box = boxes.get(i);
 			gc.setStroke(Color.RED);
-			for (var rectangle : box) {
-				gc.strokeRect(boxStartX + rectangle.x(), boxStartY + rectangle.y(), rectangle.width() * scale, rectangle.height() * scale); // x y width height
-			}
+			for (var rectangle : box)
+				gc.strokeRect(boxStartX + (rectangle.x() * scale), boxStartY + (rectangle.y() * scale), rectangle.width() * scale, rectangle.height() * scale); // x y width height
 		}
 	}
 }

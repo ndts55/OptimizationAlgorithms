@@ -1,4 +1,4 @@
-package org.ndts.optalgj;
+package org.ndts.optalgj.gui;
 
 import org.ndts.optalgj.algs.AlgorithmVariant;
 import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;

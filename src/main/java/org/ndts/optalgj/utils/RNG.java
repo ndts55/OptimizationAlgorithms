@@ -16,8 +16,4 @@ public class RNG {
 	public static int nextInt(int max) {
 		return random.nextInt(max + 1);
 	}
-
-	public static int nextPercent() {
-		return random.nextInt(101);
-	}
 }
