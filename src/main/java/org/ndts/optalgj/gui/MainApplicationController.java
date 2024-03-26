@@ -17,7 +17,7 @@ import org.ndts.optalgj.problems.rect.Input;
 import org.ndts.optalgj.problems.rect.Rectangle;
 import org.ndts.optalgj.problems.rect.SimpleSolutionConstructor;
 
-import static org.ndts.optalgj.gui.Utils.drawOutput;
+import static org.ndts.optalgj.utils.CanvasDrawer.drawOutput;
 
 
 public class MainApplicationController {
@@ -83,7 +83,14 @@ public class MainApplicationController {
 	}
 
 	private void drawTestCanvas() {
-		var output = new SimpleSolutionConstructor().arbitrarySolution(new Input(instanceTable.getItems().stream().toList(), ((int) maxBoxLength.getValue())));
+		Input input;
+		try {
+			input = new Input(instanceTable.getItems().stream().toList(), ((int) maxBoxLength.getValue()));
+		} catch (IllegalArgumentException iae) {
+			iae.printStackTrace();
+			return;
+		}
+		var output = new SimpleSolutionConstructor().arbitrarySolution(input);
 		drawOutput(output, canvas, maxBoxLength.getValue(), CANVAS_SCALE);
 	}
 

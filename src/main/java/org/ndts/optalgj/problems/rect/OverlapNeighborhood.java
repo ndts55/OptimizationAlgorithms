@@ -1,9 +1,5 @@
 package org.ndts.optalgj.problems.rect;
 
-import org.ndts.optalgj.algs.Neighborhood;
-
-import java.util.List;
-
 /*
 Die geometriebasierte Nachbarschaft wird angepasst auf die Situation, dass Rechtecke sich zu einem
 gewissen Prozentsatz überlappen dürfen. Die Überlappung zweier Rechtecke ist dabei die gemeinsame
@@ -13,9 +9,10 @@ Prozentsatz, und Verletzungen werden hart in der Zielfunktion bestraft. Am Ende 
 dafür sorgen, dass schlussendlich eine garantiert überlappungsfreie Lösung entsteht.
  */
 
-public class OverlapNeighborhood implements Neighborhood<Output> {
-	@Override
-	public List<Output> neighborhood(Output positionedRectangleList) {
-		throw new UnsupportedOperationException();
-	}
-}
+//public class OverlapNeighborhood implements Neighborhood<Output> {
+//	@Override
+//	public List<Output> neighborhood(Output positionedRectangleList) {
+//		// TODO implement overlap neighborhood
+//		throw new UnsupportedOperationException();
+//	}
+//}

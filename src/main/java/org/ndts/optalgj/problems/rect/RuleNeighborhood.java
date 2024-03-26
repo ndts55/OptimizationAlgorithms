@@ -1,9 +1,5 @@
 package org.ndts.optalgj.problems.rect;
 
-import org.ndts.optalgj.algs.Neighborhood;
-
-import java.util.List;
-
 /*
 Anstelle von zulässigen Lösungen, arbeitet die lokale Suche hier auf Permutationen von Rechtecken.
 Analog zum Greedy-Algorithmus werden die Rechtecke in der Reihenfolge der Permutation in den Boxen
@@ -11,9 +7,10 @@ platziert. Als Regel die Nachbarschaft definieren Sie durch kleine Modifikations
 Permutation. Auch hier könnte es sinnvoll sein, Rechtecke in relativ leeren Boxen anderswo in der
 Permutation zu platzieren.
  */
-public class RuleNeighborhood implements Neighborhood<Output> {
-	@Override
-	public List<Output> neighborhood(Output positionedRectangles) {
-		throw new UnsupportedOperationException();
-	}
-}
+//public class RuleNeighborhood implements Neighborhood<Output> {
+//	@Override
+//	public List<Output> neighborhood(Output positionedRectangles) {
+//		// TODO implement rule-based neighborhood
+//		throw new UnsupportedOperationException();
+//	}
+//}

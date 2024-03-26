@@ -1,24 +1,22 @@
 package org.ndts.optalgj.gui;
 
 import org.ndts.optalgj.problems.rect.Rectangle;
+import org.ndts.optalgj.utils.RNG;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class InstanceGenerator {
-
-	private static final Random random = new Random();
-
 	public static List<Rectangle> generateInstances(int count, int minWidth, int maxWidth, int minHeight, int maxHeight) {
 		var result = new ArrayList<Rectangle>(count);
 		for (int i = 0; i < count; i++) {
-			result.add(new Rectangle(nextInt(minHeight, maxHeight), nextInt(minWidth, maxWidth)));
+			result.add(
+				new Rectangle(
+					RNG.nextInt(minHeight, maxHeight),
+					RNG.nextInt(minWidth, maxWidth)
+				)
+			);
 		}
 		return result;
-	}
-
-	private static int nextInt(int min, int max) {
-		return random.nextInt(max - min + 1) + min;
 	}
 }
