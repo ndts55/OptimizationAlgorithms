@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -30,7 +31,7 @@ public class MainApplicationController {
 	@FXML
 	public Button generateInstances;
 	@FXML
-	public ToggleButton startStopButton;
+	public Button startStopButton;
 	@FXML
 	public Slider maxBoxLength;
 	@FXML
@@ -76,16 +77,28 @@ public class MainApplicationController {
 	// endregion
 	// region Other attributes
 	private SearchService service;
+	private boolean isRunning;
 	// endregion
 
 	public void onGenerateInstances() {
 		instanceTable.setItems(FXCollections.observableArrayList(InstanceGenerator.generateInstances(rectangleCount.getValue(), (int) rectangleWidthRange.getLowValue(), (int) rectangleWidthRange.getHighValue(), (int) rectangleHeightRange.getLowValue(), (int) rectangleHeightRange.getHighValue())));
 	}
 
+	// region Start Stop
+	public void onStartStopClick(ActionEvent actionEvent) {
+		if (isRunning) Platform.runLater(this::onStop);
+		else Platform.runLater(this::onStart);
+	}
+
 	private void onStart() {
 		disableStartStopButton();
 		if (instanceTable.getItems().isEmpty()) onGenerateInstances();
-		var algoVariant = algorithmVariant.getValue();
+		startService();
+		setStopButton();
+		enableStartStopButton();
+	}
+
+	private void startService() {
 		assert service == null || !service.isRunning();
 		Input input;
 		try {
@@ -95,6 +108,7 @@ public class MainApplicationController {
 			enableStartStopButton();
 			return;
 		}
+		var algoVariant = algorithmVariant.getValue();
 		service = switch (algoVariant) {
 			case Local -> new SearchService(localNeighborhoodVariant.getValue(), input);
 			case Greedy -> new SearchService(greedyNeighborhoodVariant.getValue(), input);
@@ -103,16 +117,27 @@ public class MainApplicationController {
 			canvas));
 		service.valueProperty().addListener((obs, oldValue, newValue) -> boxCountInfo.setText(String.valueOf(newValue.boxes().size())));
 		service.iterationProperty().addListener((obs, oldValue, newValue) -> Platform.runLater(() -> iterationCountInfo.setText(String.valueOf(newValue))));
+		service.setOnSucceeded(e -> Platform.runLater(() -> {
+			drawOutput(service.getValue(), canvas);
+			setStartButton();
+		}));
 		service.start();
-		enableStartStopButton();
+		isRunning = true;
 	}
 
 	private void onStop() {
 		disableStartStopButton();
-		assert service != null;
-		service.cancel();
+		stopService();
+		setStartButton();
 		enableStartStopButton();
 	}
+
+	private void stopService() {
+		assert service != null;
+		service.cancel();
+		isRunning = false;
+	}
+	// endregion
 
 	// region Initialize
 	@FXML
@@ -120,7 +145,6 @@ public class MainApplicationController {
 		initializeInstanceManagement();
 		initializeInstanceInspector();
 		initializeAlgorithmNeighborhood();
-		initializeRun();
 		initializeCanvas();
 	}
 
@@ -147,16 +171,7 @@ public class MainApplicationController {
 		greedyNeighborhoodVariant.getSelectionModel().selectFirst();
 	}
 
-	private void initializeRun() {
-		startStopButton.textProperty().bind(Bindings.when(startStopButton.selectedProperty()).then("Stop").otherwise("Start"));
-		startStopButton.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
-			if (!oldValue && newValue) onStart();
-			else if (oldValue && !newValue) onStop();
-		});
-	}
-
 	private void initializeCanvas() {
-//		canvas.heightProperty().bind(drawer.heightProperty());
 		canvas.widthProperty().bind(rootElement.widthProperty().subtract(drawer.widthProperty()));
 	}
 	// endregion
@@ -169,5 +184,14 @@ public class MainApplicationController {
 	private void enableStartStopButton() {
 		startStopButton.setDisable(false);
 	}
+
+	private void setStopButton() {
+		startStopButton.setText("Stop");
+	}
+
+	private void setStartButton() {
+		startStopButton.setText("Start");
+	}
+
 	// endregion
 }

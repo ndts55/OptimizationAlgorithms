@@ -93,7 +93,7 @@
             </TitledPane>
             <TitledPane text="Run" prefWidth="Infinity">
                 <VBox prefWidth="Infinity">
-                    <ToggleButton fx:id="startStopButton" text="Start" maxWidth="Infinity"/>
+                    <Button fx:id="startStopButton" text="Start" maxWidth="Infinity" onAction="#onStartStopClick"/>
                     <GridPane prefWidth="Infinity" hgap="10" vgap="10" maxWidth="Infinity">
                         <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="Iteration" HBox.hgrow="ALWAYS"
                                maxWidth="Infinity"/>
