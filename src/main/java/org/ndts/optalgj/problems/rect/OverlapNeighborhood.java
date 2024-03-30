@@ -10,9 +10,4 @@ dafür sorgen, dass schlussendlich eine garantiert überlappungsfreie Lösung en
  */
 
 //public class OverlapNeighborhood implements Neighborhood<Output> {
-//	@Override
-//	public List<Output> neighborhood(Output positionedRectangleList) {
-//		// TODO implement overlap neighborhood
-//		throw new UnsupportedOperationException();
-//	}
 //}

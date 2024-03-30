@@ -8,7 +8,8 @@ public class PositionedRectangle {
 	private int y;
 	private boolean rotated; // without this we'd have to rotate the rectangle properties
 
-	PositionedRectangle(final Rectangle rectangle, final int x, final int y, final boolean rotated) {
+	PositionedRectangle(final Rectangle rectangle, final int x, final int y,
+						final boolean rotated) {
 		this.rectangle = rectangle;
 		this.x = x;
 		this.y = y;
@@ -21,7 +22,8 @@ public class PositionedRectangle {
 	}
 
 	PositionedRectangle(final PositionedRectangle positionedRectangle) {
-		this(positionedRectangle.rectangle, positionedRectangle.x, positionedRectangle.y, positionedRectangle.rotated);
+		this(positionedRectangle.rectangle, positionedRectangle.x, positionedRectangle.y,
+			positionedRectangle.rotated);
 	}
 
 	public boolean overlapsWith(final PositionedRectangle other) {
@@ -78,5 +80,9 @@ public class PositionedRectangle {
 
 	public int area() {
 		return area;
+	}
+
+	public int id() {
+		return rectangle.id();
 	}
 }

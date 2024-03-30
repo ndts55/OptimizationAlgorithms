@@ -8,9 +8,4 @@ Permutation. Auch hier könnte es sinnvoll sein, Rechtecke in relativ leeren Box
 Permutation zu platzieren.
  */
 //public class RuleNeighborhood implements Neighborhood<Output> {
-//	@Override
-//	public List<Output> neighborhood(Output positionedRectangles) {
-//		// TODO implement rule-based neighborhood
-//		throw new UnsupportedOperationException();
-//	}
 //}

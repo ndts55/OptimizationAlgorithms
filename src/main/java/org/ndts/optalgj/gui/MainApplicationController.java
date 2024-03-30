@@ -89,18 +89,19 @@ public class MainApplicationController {
 		assert service == null || !service.isRunning();
 		Input input;
 		try {
-			input = new Input(instanceTable.getItems().stream().toList(), (int) maxBoxLength.getValue());
+			input = new Input(instanceTable.getItems().stream().toList(),
+				(int) maxBoxLength.getValue());
 		} catch (IllegalArgumentException iae) {
 			enableStartStopButton();
 			return;
 		}
 		service = switch (algoVariant) {
 			case Local -> new SearchService(localNeighborhoodVariant.getValue(), input);
-			case Greedy ->
-				new SearchService(greedyNeighborhoodVariant.getValue(), input);
+			case Greedy -> new SearchService(greedyNeighborhoodVariant.getValue(), input);
 		};
-		service.valueProperty().addListener((obs, oldValue, newValue) -> drawOutput(newValue, canvas, input.boxLength()));
-		service.messageProperty().addListener((obs, oldValue, newValue) -> System.out.println(newValue));
+		service.valueProperty().addListener((obs, oldValue, newValue) -> drawOutput(newValue,
+			canvas));
+		service.valueProperty().addListener((obs, oldValue, newValue) -> boxCountInfo.setText(String.valueOf(newValue.boxes().size())));
 		service.iterationProperty().addListener((obs, oldValue, newValue) -> Platform.runLater(() -> iterationCountInfo.setText(String.valueOf(newValue))));
 		service.start();
 		enableStartStopButton();
@@ -155,7 +156,7 @@ public class MainApplicationController {
 	}
 
 	private void initializeCanvas() {
-		canvas.heightProperty().bind(drawer.heightProperty());
+//		canvas.heightProperty().bind(drawer.heightProperty());
 		canvas.widthProperty().bind(rootElement.widthProperty().subtract(drawer.widthProperty()));
 	}
 	// endregion

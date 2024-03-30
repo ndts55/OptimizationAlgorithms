@@ -21,7 +21,7 @@
                                 <Label fx:id="maxBoxLengthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                             </HBox>
                             <Slider fx:id="maxBoxLength" min="1" max="30" snapToTicks="true" majorTickUnit="1"
-                                    blockIncrement="1" showTickMarks="true" minorTickCount="0" value="7"/>
+                                    blockIncrement="1" showTickMarks="true" minorTickCount="0" value="20"/>
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Rectangle" prefWidth="Infinity">
@@ -120,7 +120,9 @@
         </VBox>
     </left>
     <center>
-        <Canvas fx:id="canvas"/>
+        <ScrollPane fitToWidth="true" fitToHeight="true">
+            <Canvas fx:id="canvas"/>
+        </ScrollPane>
     </center>
     <bottom>
     </bottom>

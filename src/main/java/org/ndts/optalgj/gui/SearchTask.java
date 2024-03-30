@@ -21,11 +21,12 @@ public class SearchTask extends Task<Output> {
 	}
 
 	public SearchTask(final LocalNeighborhoodVariant neighborhoodVariant, Input input) {
-		this(new LocalSearch<>(new SimpleSolutionConstructor(), new BoxCountMinimization(), switch (neighborhoodVariant) {
-			case LocalNeighborhoodVariant.Geometric -> new GeometricNeighborhood();
-			case LocalNeighborhoodVariant.Rules, LocalNeighborhoodVariant.Overlap ->
-				throw new UnsupportedOperationException();
-		}), input);
+		this(new LocalSearch<>(new SimpleSolutionConstructor(), new BoxCountMinimization(),
+			switch (neighborhoodVariant) {
+				case LocalNeighborhoodVariant.Geometric -> new GeometricNeighborhood();
+				case LocalNeighborhoodVariant.Rules, LocalNeighborhoodVariant.Overlap ->
+					throw new UnsupportedOperationException();
+			}), input);
 	}
 
 	public SearchTask(final GreedyNeighborhoodVariant neighborhoodVariant, Input input) {
@@ -52,6 +53,7 @@ public class SearchTask extends Task<Output> {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			// TODO call updateValue every X ms instead of on every iteration
 			if (progressed) updateValue(algorithm.currentOutput());
 			countIteration();
 		} while (!isCancelled() && progressed);
