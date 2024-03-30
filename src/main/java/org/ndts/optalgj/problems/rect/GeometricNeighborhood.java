@@ -4,6 +4,7 @@ import org.ndts.optalgj.algs.Neighborhood;
 import org.ndts.optalgj.algs.ObjectiveFunction;
 import org.ndts.optalgj.utils.RNG;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,7 +19,7 @@ in dieser Box sind, weiter verringert wird, auch wenn die Box damit (noch) nicht
  */
 
 enum GeometricAction {
-	MoveWithin, MoveBetween
+	MoveWithin, MoveBetween, Merge
 }
 
 public class GeometricNeighborhood implements Neighborhood<Output> {
@@ -53,15 +54,16 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		final var initialEvaluation = obj.evaluate(initial);
 		var output = initial.copy();
 		for (var i = 0; !isCancelled() && obj.evaluate(output) >= initialEvaluation && i < MAX_ACTION_COUNT; i++)
-			switch (randomAction()) {
+			switch (selectAction()) {
 				case MoveWithin -> moveRectangleInBox(output, 100);
 				case MoveBetween -> moveRectangleToOtherBox(output);
+				case Merge -> mergeSmallestBoxes(output);
 			}
 		sortBoxesBySize(output);
 		return output;
 	}
 
-	private GeometricAction randomAction() {
+	private GeometricAction selectAction() {
 		return GeometricAction.values()[RNG.nextIndex(GeometricAction.values().length)];
 	}
 
@@ -108,23 +110,40 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		return false;
 	}
 
-	private boolean moveRectangleToOtherBox(final Output o) {
-		if (o.boxes().size() <= 1) return false;// no other box exists
-		final var sourceBox = pickSourceBox(o);
-		var destinationBox = pickRandomBox(o);
+	private boolean moveRectangleToOtherBox(final Output output) {
+		if (output.boxes().size() <= 1) return false;// no other box exists
+		final var sourceBox = pickSourceBox(output);
+		var destinationBox = pickRandomBox(output);
 		while (!isCancelled() && sourceBox == destinationBox)
-			destinationBox = pickRandomBox(o);
+			destinationBox = pickRandomBox(output);
 		if (isCancelled()) return false;
 		final var rectangleIndex = RNG.nextIndex(sourceBox.size());
 		final var rectangle = sourceBox.get(rectangleIndex);
-		final var freeBoxArea = (o.boxLength() * o.boxLength()) - destinationBox.occupiedArea();
+		final var freeBoxArea =
+			(output.boxLength() * output.boxLength()) - destinationBox.occupiedArea();
 		if (freeBoxArea >= rectangle.area() && tryToFit(rectangle, destinationBox,
-			o.boxLength())) {
+			output.boxLength())) {
 			// move from source to destination
 			destinationBox.add(sourceBox.remove(rectangleIndex));
-			if (sourceBox.size() == 0) o.boxes().remove(sourceBox);
+			if (sourceBox.size() == 0) output.boxes().remove(sourceBox);
 		}
 		return true;
+	}
+
+	private boolean mergeSmallestBoxes(final Output output) {
+		if (output.boxes().size() <= 1) return false;
+		final var box0 = output.boxes().getFirst();
+		final var box1 = output.boxes().get(1);
+		final var totalBoxArea = output.boxLength() * output.boxLength();
+		var toRemove = new ArrayList<PositionedRectangle>();
+		for (var rectangle : box0)
+			if (totalBoxArea - box1.occupiedArea() >= rectangle.area() && tryToFit(rectangle, box1
+				, output.boxLength())) {
+				box1.add(rectangle);
+				toRemove.add(rectangle);
+			}
+		box0.rectangles().removeAll(toRemove);
+		return !toRemove.isEmpty();
 	}
 
 	private Box pickSourceBox(final Output o) {
