@@ -22,7 +22,7 @@ enum GeometricAction {
 }
 
 public class GeometricNeighborhood implements Neighborhood<Output> {
-	private static final long STALL_THRESHOLD = 1000;
+	private static final long STALL_THRESHOLD = 500;
 	private final AtomicBoolean cancelled = new AtomicBoolean(false);
 	private long lastSignificantImprovement = 0;
 	private long currentIteration = 0;
@@ -40,7 +40,7 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 	@Override
 	public Output betterNeighbor(final Output initial, final ObjectiveFunction<Output> obj) {
 		var initialEvaluation = obj.evaluate(initial);
-		var output = ff(initial, obj);
+		var output = findBetterNeighbor(initial, obj);
 		var outputEvaluation = obj.evaluate(output);
 		if (outputEvaluation < initialEvaluation) lastSignificantImprovement = currentIteration;
 		if ((currentIteration - lastSignificantImprovement) >= STALL_THRESHOLD) return null;
@@ -48,29 +48,16 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		return output;
 	}
 
-	private Output ff(final Output initial, final ObjectiveFunction<Output> obj) {
+	private Output findBetterNeighbor(final Output initial, final ObjectiveFunction<Output> obj) {
 		final var initialEvaluation = obj.evaluate(initial);
 		var output = initial.copy();
-		do {
-			findBetterNeighbor(output);
-		} while (!isCancelled() && obj.evaluate(output) > initialEvaluation);
-		return output;
-	}
-
-	private boolean findBetterNeighbor(Output output) {
-		// TODO should the number of attempts depend on the total number of rectangles
-		//  somehow?
-		final var selector = randomAction();
-		final var r = switch (selector) {
-			case MoveWithin ->
-				// move random rectangle within its box
-				moveRectangleInBox(output, 100);
-			case MoveBetween ->
-				// move random rectangle from one box to another
-				moveRectangleToOtherBox(output);
-		};
+		while (!isCancelled() && obj.evaluate(output) >= initialEvaluation)
+			switch (randomAction()) {
+				case MoveWithin -> moveRectangleInBox(output, 100);
+				case MoveBetween -> moveRectangleToOtherBox(output);
+			}
 		sortBoxesBySize(output);
-		return r;
+		return output;
 	}
 
 	private GeometricAction randomAction() {
@@ -138,7 +125,6 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		}
 		return true;
 	}
-
 
 	private Box pickSourceBox(final Output o) {
 		// pick multiple random boxes and pick the one with the fewest number of rectangles
