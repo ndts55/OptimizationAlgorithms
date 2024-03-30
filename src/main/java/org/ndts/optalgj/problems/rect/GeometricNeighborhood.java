@@ -22,7 +22,8 @@ enum GeometricAction {
 }
 
 public class GeometricNeighborhood implements Neighborhood<Output> {
-	private static final long STALL_THRESHOLD = 500;
+	private static final long STALL_THRESHOLD = 1000;
+	private static final int MAX_ACTION_COUNT = 1000;
 	private final AtomicBoolean cancelled = new AtomicBoolean(false);
 	private long lastSignificantImprovement = 0;
 	private long currentIteration = 0;
@@ -51,7 +52,7 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 	private Output findBetterNeighbor(final Output initial, final ObjectiveFunction<Output> obj) {
 		final var initialEvaluation = obj.evaluate(initial);
 		var output = initial.copy();
-		while (!isCancelled() && obj.evaluate(output) >= initialEvaluation)
+		for (var i = 0; !isCancelled() && obj.evaluate(output) >= initialEvaluation && i < MAX_ACTION_COUNT; i++)
 			switch (randomAction()) {
 				case MoveWithin -> moveRectangleInBox(output, 100);
 				case MoveBetween -> moveRectangleToOtherBox(output);
