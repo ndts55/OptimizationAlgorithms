@@ -143,6 +143,7 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 				toRemove.add(rectangle);
 			}
 		box0.rectangles().removeAll(toRemove);
+		if (box0.size() == 0) output.boxes().removeFirst();
 		return !toRemove.isEmpty();
 	}
 
