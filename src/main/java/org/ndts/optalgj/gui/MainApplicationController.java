@@ -1,30 +1,45 @@
 package org.ndts.optalgj.gui;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import org.controlsfx.control.RangeSlider;
 import org.ndts.optalgj.algs.AlgorithmVariant;
 import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;
 import org.ndts.optalgj.algs.LocalNeighborhoodVariant;
+import org.ndts.optalgj.problems.rect.Box;
 import org.ndts.optalgj.problems.rect.Input;
 import org.ndts.optalgj.problems.rect.Rectangle;
+
+import java.text.DecimalFormat;
 
 import static org.ndts.optalgj.gui.CanvasDrawer.drawOutput;
 
 
 public class MainApplicationController {
 	// region Constants
+	private static final String VALUE_PREFIX = "Value: ";
 	private static final String MIN_PREFIX = "Min: ";
 	private static final String MAX_PREFIX = "Max: ";
+	private final DecimalFormat spaceInfoFormat = new DecimalFormat("#.##%");
 	// endregion
+	private final LongProperty runningSecondsProperty = new SimpleLongProperty(0L);
+	private final Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1),
+		event -> Platform.runLater(() -> {
+			System.out.println(runningSecondsProperty.get());
+			runningSecondsProperty.set(runningSecondsProperty.get() + 1);
+		})));
 	// region @FXML Attributes
 	@FXML
 	public Canvas canvas;
@@ -77,17 +92,22 @@ public class MainApplicationController {
 	// endregion
 	// region Other attributes
 	private SearchService service;
-	private boolean isRunning;
+
 	// endregion
+	private boolean isRunning() {
+		return service != null && service.isRunning();
+	}
 
 	public void onGenerateInstances() {
 		instanceTable.setItems(FXCollections.observableArrayList(InstanceGenerator.generateInstances(rectangleCount.getValue(), (int) rectangleWidthRange.getLowValue(), (int) rectangleWidthRange.getHighValue(), (int) rectangleHeightRange.getLowValue(), (int) rectangleHeightRange.getHighValue())));
 	}
 
 	// region Start Stop
-	public void onStartStopClick(ActionEvent actionEvent) {
-		if (isRunning) Platform.runLater(this::onStop);
-		else Platform.runLater(this::onStart);
+	public void onStartStopClick() {
+		Platform.runLater(() -> {
+			if (isRunning()) onStop();
+			else onStart();
+		});
 	}
 
 	private void onStart() {
@@ -108,21 +128,29 @@ public class MainApplicationController {
 			enableStartStopButton();
 			return;
 		}
-		var algoVariant = algorithmVariant.getValue();
-		service = switch (algoVariant) {
+
+		service = switch (algorithmVariant.getValue()) {
 			case Local -> new SearchService(localNeighborhoodVariant.getValue(), input);
 			case Greedy -> new SearchService(greedyNeighborhoodVariant.getValue(), input);
 		};
-		service.valueProperty().addListener((obs, oldValue, newValue) -> drawOutput(newValue,
-			canvas));
-		service.valueProperty().addListener((obs, oldValue, newValue) -> boxCountInfo.setText(String.valueOf(newValue.boxes().size())));
-		service.iterationProperty().addListener((obs, oldValue, newValue) -> Platform.runLater(() -> iterationCountInfo.setText(String.valueOf(newValue))));
+		service.valueProperty().addListener((a, b, newValue) -> drawOutput(newValue, canvas));
+		service.valueProperty().addListener((a, b, newValue) -> boxCountInfo.setText(String.valueOf(newValue.boxes().size())));
+		service.valueProperty().addListener((a, b, newValue) -> {
+			final var totalArea =
+				(double) newValue.boxLength() * newValue.boxLength() * newValue.boxes().size();
+			final var occupiedArea =
+				(double) newValue.boxes().stream().mapToInt(Box::occupiedArea).sum();
+			spaceInfo.setText(spaceInfoFormat.format(occupiedArea / totalArea));
+		});
+		service.iterationProperty().addListener((a, b, newValue) -> Platform.runLater(() -> iterationCountInfo.setText(String.valueOf(newValue))));
 		service.setOnSucceeded(e -> Platform.runLater(() -> {
 			drawOutput(service.getValue(), canvas);
 			setStartButton();
+			stopTimer();
 		}));
+
 		service.start();
-		isRunning = true;
+		startTimer();
 	}
 
 	private void onStop() {
@@ -130,12 +158,12 @@ public class MainApplicationController {
 		stopService();
 		setStartButton();
 		enableStartStopButton();
+		stopTimer();
 	}
 
 	private void stopService() {
 		assert service != null;
 		service.cancel();
-		isRunning = false;
 	}
 	// endregion
 
@@ -146,10 +174,12 @@ public class MainApplicationController {
 		initializeInstanceInspector();
 		initializeAlgorithmNeighborhood();
 		initializeCanvas();
+		initializeInfoLabels();
+		initializeTimer();
 	}
 
 	private void initializeInstanceManagement() {
-		maxBoxLengthInfo.textProperty().bind(Bindings.createStringBinding(() -> MAX_PREFIX + (int) maxBoxLength.getValue(), maxBoxLength.valueProperty()));
+		maxBoxLengthInfo.textProperty().bind(Bindings.createStringBinding(() -> VALUE_PREFIX + (int) maxBoxLength.getValue(), maxBoxLength.valueProperty()));
 		minRectangleWidthInfo.textProperty().bind(Bindings.createStringBinding(() -> MIN_PREFIX + (int) rectangleWidthRange.getLowValue(), rectangleWidthRange.lowValueProperty()));
 		maxRectangleWidthInfo.textProperty().bind(Bindings.createStringBinding(() -> MAX_PREFIX + (int) rectangleWidthRange.getHighValue(), rectangleWidthRange.highValueProperty()));
 		minRectangleHeightInfo.textProperty().bind(Bindings.createStringBinding(() -> MIN_PREFIX + (int) rectangleHeightRange.getLowValue(), rectangleHeightRange.lowValueProperty()));
@@ -174,6 +204,14 @@ public class MainApplicationController {
 	private void initializeCanvas() {
 		canvas.widthProperty().bind(rootElement.widthProperty().subtract(drawer.widthProperty()));
 	}
+
+	private void initializeInfoLabels() {
+		elapsedTimeInfo.textProperty().bind(runningSecondsProperty.asString("%s s"));
+	}
+
+	private void initializeTimer() {
+		timer.setCycleCount(Timeline.INDEFINITE);
+	}
 	// endregion
 
 	// region UI utils
@@ -193,5 +231,13 @@ public class MainApplicationController {
 		startStopButton.setText("Start");
 	}
 
+	private void startTimer() {
+		runningSecondsProperty.set(0);
+		timer.play();
+	}
+
+	private void stopTimer() {
+		timer.stop();
+	}
 	// endregion
 }
