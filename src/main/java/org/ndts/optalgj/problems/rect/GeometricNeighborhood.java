@@ -23,12 +23,18 @@ enum GeometricAction {
 }
 
 public class GeometricNeighborhood implements Neighborhood<Output> {
+	// region Constants
 	private static final long STALL_THRESHOLD = 1000;
 	private static final int MAX_ACTION_COUNT = 1000;
+	// endregion
+
+	// region Private Attributes
 	private final AtomicBoolean cancelled = new AtomicBoolean(false);
 	private long lastSignificantImprovement = 0;
 	private long currentIteration = 0;
+	// endregion
 
+	// region Cancellation
 	@Override
 	public void cancel() {
 		cancelled.setRelease(true);
@@ -38,7 +44,9 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 	public boolean isCancelled() {
 		return cancelled.getAcquire();
 	}
+	// endregion
 
+	// region Better Neighbor
 	@Override
 	public Output betterNeighbor(final Output initial, final ObjectiveFunction<Output> obj) {
 		var initialEvaluation = obj.evaluate(initial);
@@ -54,23 +62,17 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		final var initialEvaluation = obj.evaluate(initial);
 		var output = initial.copy();
 		for (var i = 0; !isCancelled() && obj.evaluate(output) >= initialEvaluation && i < MAX_ACTION_COUNT; i++)
-			switch (selectAction()) {
+			switch (GeometricAction.values()[RNG.nextIndex(GeometricAction.values().length)]) {
 				case MoveWithin -> moveRectangleInBox(output, 100);
 				case MoveBetween -> moveRectangleToOtherBox(output);
 				case Merge -> mergeSmallestBoxes(output);
 			}
-		sortBoxesBySize(output);
+		output.boxes().sort(Comparator.comparingInt(Box::size));
 		return output;
 	}
+	// endregion
 
-	private GeometricAction selectAction() {
-		return GeometricAction.values()[RNG.nextIndex(GeometricAction.values().length)];
-	}
-
-	private void sortBoxesBySize(final Output output) {
-		output.boxes().sort(Comparator.comparingInt(Box::size));
-	}
-
+	// region Move Rectangle in Box
 	private boolean moveRectangleInBox(final Output output, int attempts) {
 		for (var i = 0; !isCancelled() && i < attempts; i++) {
 			if (attemptToMoveRectangleInBox(output)) return true;
@@ -109,7 +111,9 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		rectangle.transformTo(backupX, backupY);
 		return false;
 	}
+	// endregion
 
+	// region Move Rectangle to Other Box
 	private boolean moveRectangleToOtherBox(final Output output) {
 		if (output.boxes().size() <= 1) return false;// no other box exists
 		final var sourceBox = pickSourceBox(output);
@@ -130,6 +134,21 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		return true;
 	}
 
+	private Box pickSourceBox(final Output o) {
+		// pick multiple random boxes and pick the one with the fewest number of rectangles
+		final var n = o.boxes().size();
+		final var firstBox = o.boxes().get(RNG.nextIndex(n / 2));
+		final var secondBox = o.boxes().get(RNG.nextIndex(n));
+		if (secondBox.size() < firstBox.size()) return secondBox;
+		else return firstBox;
+	}
+
+	private Box pickRandomBox(final Output o) {
+		return o.boxes().get(RNG.nextIndex(o.boxes().size()));
+	}
+	// endregion
+
+	// region Merge Smallest Boxes
 	private boolean mergeSmallestBoxes(final Output output) {
 		if (output.boxes().size() <= 1) return false;
 		final var box0 = output.boxes().getFirst();
@@ -146,20 +165,9 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		if (box0.size() == 0) output.boxes().removeFirst();
 		return !toRemove.isEmpty();
 	}
+	// endregion
 
-	private Box pickSourceBox(final Output o) {
-		// pick multiple random boxes and pick the one with the fewest number of rectangles
-		final var n = o.boxes().size();
-		final var firstBox = o.boxes().get(RNG.nextIndex(n / 2));
-		final var secondBox = o.boxes().get(RNG.nextIndex(n));
-		if (secondBox.size() < firstBox.size()) return secondBox;
-		else return firstBox;
-	}
-
-	private Box pickRandomBox(final Output o) {
-		return o.boxes().get(RNG.nextIndex(o.boxes().size()));
-	}
-
+	// region Utils
 	private boolean tryToFit(PositionedRectangle rectangle, Box box, int boxLength) {
 		final var backupX = rectangle.x();
 		final var backupY = rectangle.y();
@@ -202,4 +210,5 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		for (var rect : box) if (rect.overlapsWith(rectangle)) return false;
 		return true;
 	}
+	// endregion
 }
