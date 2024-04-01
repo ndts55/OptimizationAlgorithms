@@ -24,8 +24,8 @@ public class SearchTask extends Task<Output> {
 		this(new LocalSearch<>(new SimpleSolutionConstructor(), new BoxCountMinimization(),
 			switch (neighborhoodVariant) {
 				case LocalNeighborhoodVariant.Geometric -> new GeometricNeighborhood();
-				case LocalNeighborhoodVariant.Rules, LocalNeighborhoodVariant.Overlap ->
-					throw new UnsupportedOperationException();
+				case LocalNeighborhoodVariant.Overlap -> new OverlapNeighborhood();
+				case LocalNeighborhoodVariant.Rules -> throw new UnsupportedOperationException();
 			}), input);
 	}
 

@@ -30,8 +30,8 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 
 	// region Private Attributes
 	private final AtomicBoolean cancelled = new AtomicBoolean(false);
-	private long lastSignificantImprovement = 0;
-	private long currentIteration = 0;
+	protected long lastSignificantImprovement = 0;
+	protected long currentIteration = 0;
 	// endregion
 
 	// region Cancellation
@@ -58,7 +58,8 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		return output;
 	}
 
-	private Output findBetterNeighbor(final Output initial, final ObjectiveFunction<Output> obj) {
+	protected Output findBetterNeighbor(final Output initial,
+										final ObjectiveFunction<Output> obj) {
 		final var initialEvaluation = obj.evaluate(initial);
 		var output = initial.copy();
 		for (var i = 0; !isCancelled() && obj.evaluate(output) >= initialEvaluation && i < MAX_ACTION_COUNT; i++)
@@ -96,15 +97,14 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		final var backupX = rectangle.x();
 		final var backupY = rectangle.y();
 		// move rectangle to the smallest position
+		final var boxLength = output.boxLength();
 		for (var col = 0; !isCancelled() && col < rectangle.x(); col++)
 			if (rectangle.y() != col) for (var row = 0; row < rectangle.y(); row++) {
 				rectangle.transformTo(col, row);
-				var fits =
-					!rectangle.outOfBounds(output.boxLength()) && !box.overlapsExistAt(rectangleIndex);
+				var fits = !rectangle.outOfBounds(boxLength) && canFitInSame(rectangleIndex, box);
 				if (fits) return true;
 				rectangle.rotate();
-				fits =
-					!rectangle.outOfBounds(output.boxLength()) && !box.overlapsExistAt(rectangleIndex);
+				fits = !rectangle.outOfBounds(boxLength) && canFitInSame(rectangleIndex, box);
 				if (fits) return true;
 				rectangle.rotate();
 			}
@@ -134,11 +134,11 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		return true;
 	}
 
-	private Box pickSourceBox(final Output o) {
+	private Box pickSourceBox(final Output output) {
 		// pick multiple random boxes and pick the one with the fewest number of rectangles
-		final var n = o.boxes().size();
-		final var firstBox = o.boxes().get(RNG.nextIndex(n / 2));
-		final var secondBox = o.boxes().get(RNG.nextIndex(n));
+		final var n = output.boxes().size();
+		final var firstBox = output.boxes().get(RNG.nextIndex(n / 2));
+		final var secondBox = output.boxes().get(RNG.nextIndex(n));
 		if (secondBox.size() < firstBox.size()) return secondBox;
 		else return firstBox;
 	}
@@ -181,7 +181,7 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 				for (var col = 0; !fits && col < boxLength - rectangle.width(); col += 1) {
 					rectangle.transformTo(col, row);
 					if (rectangle.outOfBounds(boxLength)) continue;
-					fits = canFit(rectangle, box);
+					fits = canFitInOther(rectangle, box);
 				}
 				// found a fitting configuration
 				if (fits) break;
@@ -194,7 +194,7 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 				for (var col = 0; !fits && col < boxLength - rectangle.width(); col += 1) {
 					rectangle.transformTo(col, row);
 					if (rectangle.outOfBounds(boxLength)) continue;
-					fits = canFit(rectangle, box);
+					fits = canFitInOther(rectangle, box);
 				}
 				// rotate back if no fit was found
 				if (fits) break;
@@ -206,9 +206,12 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		return fits;
 	}
 
-	private boolean canFit(PositionedRectangle rectangle, Box box) {
-		for (var rect : box) if (rect.overlapsWith(rectangle)) return false;
-		return true;
+	protected boolean canFitInSame(final int rectangleIndex, final Box box) {
+		return !box.overlapExistsAt(rectangleIndex);
+	}
+
+	protected boolean canFitInOther(final PositionedRectangle rectangle, final Box box) {
+		return !box.wouldOverlap(rectangle);
 	}
 	// endregion
 }

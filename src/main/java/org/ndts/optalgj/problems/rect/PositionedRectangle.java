@@ -39,6 +39,17 @@ public class PositionedRectangle {
 		return !(l1x >= r2x || l2x >= r1x || l1y >= r2y || l2y >= r1y);
 	}
 
+	public int overlapArea(final PositionedRectangle other) {
+		final var width = Math.min(x + width(), other.x + other.width()) - Math.max(x, other.x);
+		final var height = Math.min(y + height(), other.y + other.height()) - Math.max(y, other.y);
+		return width * height;
+	}
+
+	public double overlapPercentage(final PositionedRectangle other) {
+		final var area = overlapArea(other);
+		return (double) area / Math.max(area, other.area);
+	}
+
 	public boolean outOfBounds(int boxLength) {
 		return x < 0 || y < 0 || x + width() > boxLength - 1 || y + height() > boxLength - 1;
 	}
