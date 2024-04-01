@@ -103,7 +103,7 @@
                         <Label GridPane.rowIndex="1" GridPane.columnIndex="0" text="Elapsed Time" HBox.hgrow="ALWAYS"
                                maxWidth="Infinity"/>
                         <Label GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="elapsedTimeInfo"
-                               HBox.hgrow="ALWAYS" maxWidth="Infinity" text="0 s"/>
+                               HBox.hgrow="ALWAYS" maxWidth="Infinity" text="0s"/>
 
                         <Label GridPane.rowIndex="2" GridPane.columnIndex="0" text="Box Count" HBox.hgrow="ALWAYS"
                                maxWidth="Infinity"/>
@@ -113,7 +113,7 @@
                         <Label GridPane.rowIndex="3" GridPane.columnIndex="0" text="Occupied Space" HBox.hgrow="ALWAYS"
                                maxWidth="Infinity"/>
                         <Label GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="spaceInfo" HBox.hgrow="ALWAYS"
-                               maxWidth="Infinity" text="0"/>
+                               maxWidth="Infinity" text="0%"/>
                     </GridPane>
                 </VBox>
             </TitledPane>

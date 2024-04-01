@@ -36,10 +36,7 @@ public class MainApplicationController {
 	// endregion
 	private final LongProperty runningSecondsProperty = new SimpleLongProperty(0L);
 	private final Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1),
-		event -> Platform.runLater(() -> {
-			System.out.println(runningSecondsProperty.get());
-			runningSecondsProperty.set(runningSecondsProperty.get() + 1);
-		})));
+		event -> Platform.runLater(() -> runningSecondsProperty.set(runningSecondsProperty.get() + 1))));
 	// region @FXML Attributes
 	@FXML
 	public Canvas canvas;
@@ -206,7 +203,7 @@ public class MainApplicationController {
 	}
 
 	private void initializeInfoLabels() {
-		elapsedTimeInfo.textProperty().bind(runningSecondsProperty.asString("%s s"));
+		elapsedTimeInfo.textProperty().bind(runningSecondsProperty.asString("%ss"));
 	}
 
 	private void initializeTimer() {
