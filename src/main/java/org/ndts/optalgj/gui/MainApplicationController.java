@@ -32,11 +32,15 @@ public class MainApplicationController {
 	private static final String VALUE_PREFIX = "Value: ";
 	private static final String MIN_PREFIX = "Min: ";
 	private static final String MAX_PREFIX = "Max: ";
-	private final DecimalFormat spaceInfoFormat = new DecimalFormat("#.##%");
 	// endregion
+
+	// region Final Attributes
+	private final DecimalFormat spaceInfoFormat = new DecimalFormat("#.##%");
 	private final LongProperty runningSecondsProperty = new SimpleLongProperty(0L);
 	private final Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1),
 		event -> Platform.runLater(() -> runningSecondsProperty.set(runningSecondsProperty.get() + 1))));
+	// endregion
+
 	// region @FXML Attributes
 	@FXML
 	public Canvas canvas;
@@ -87,26 +91,26 @@ public class MainApplicationController {
 	@FXML
 	public BorderPane rootElement;
 	// endregion
+
 	// region Other attributes
 	private SearchService service;
 
 	// endregion
-	private boolean isRunning() {
-		return service != null && service.isRunning();
-	}
 
+	// region Event Handlers
 	public void onGenerateInstances() {
 		instanceTable.setItems(FXCollections.observableArrayList(InstanceGenerator.generateInstances(rectangleCount.getValue(), (int) rectangleWidthRange.getLowValue(), (int) rectangleWidthRange.getHighValue(), (int) rectangleHeightRange.getLowValue(), (int) rectangleHeightRange.getHighValue())));
 	}
 
-	// region Start Stop
 	public void onStartStopClick() {
 		Platform.runLater(() -> {
 			if (isRunning()) onStop();
 			else onStart();
 		});
 	}
+	// endregion
 
+	// region Start Stop
 	private void onStart() {
 		disableStartStopButton();
 		if (instanceTable.getItems().isEmpty()) onGenerateInstances();
@@ -211,7 +215,7 @@ public class MainApplicationController {
 	}
 	// endregion
 
-	// region UI utils
+	// region Utils
 	private void disableStartStopButton() {
 		startStopButton.setDisable(true);
 	}
@@ -235,6 +239,10 @@ public class MainApplicationController {
 
 	private void stopTimer() {
 		timer.stop();
+	}
+
+	private boolean isRunning() {
+		return service != null && service.isRunning();
 	}
 	// endregion
 }
