@@ -12,7 +12,8 @@
     <left>
         <VBox fx:id="drawer" prefWidth="300" prefHeight="Infinity">
             <VBox prefWidth="Infinity" styleClass="first-pane">
-                <Button fx:id="startStopButton" text="Start" maxWidth="Infinity" onAction="#onStartStopClick"/>
+                <Button fx:id="startStopButton" text="Start" maxWidth="Infinity" onAction="#onStartStopClick"
+                        styleClass="main-button"/>
                 <Region prefHeight="15"/>
                 <GridPane prefWidth="Infinity" maxWidth="Infinity" styleClass="grid-pane">
                     <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="Iteration" HBox.hgrow="ALWAYS"

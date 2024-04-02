@@ -71,6 +71,11 @@
     -fx-text-fill: -fx-text-color;
 }
 
+.main-button {
+    -fx-background-color: derive(-fx-accent-color, 30%);
+    -fx-text-fill: -fx-text-color;
+}
+
 /* endregion */
 
 /* region ChoiceBox */
