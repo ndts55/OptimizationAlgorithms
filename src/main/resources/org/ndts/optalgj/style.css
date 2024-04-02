@@ -1,1 +1,203 @@
-/*TODO make this application somewhat pretty*/
+.root-pane {
+    -fx-background-color: white;
+}
+
+.first-pane {
+    -fx-padding: 15px;
+}
+
+/* region TitledPane */
+
+.titledPane > .title {
+    -fx-font-size: 20px;
+    -fx-alignment: center;
+}
+
+.titled-pane > .title > .arrow-button > .arrow {
+    -fx-background-color: gray;
+    -fx-background-insets: 0px;
+    -fx-effect: null;
+}
+
+.titled-pane > .title > .arrow-button > .arrow:hover {
+    -fx-background-color: blue;
+}
+
+.titled-pane > .title {
+    -fx-background-color: white;
+    -fx-alignment: center;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-border-width: 0px;
+}
+
+.titled-pane > .content {
+    -fx-background-color: white;
+    -fx-border-width: 0px;
+}
+
+/* endregion */
+
+/* region Button */
+
+.button {
+    -fx-background-color: lightgray;
+    -fx-border-width: 0px;
+    -fx-padding: 10 5 10 5;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: lightblue;
+}
+
+/* endregion */
+
+/* region ChoiceBox */
+
+.choice-box {
+    -fx-padding: 5 0 5 0;
+    -fx-background-color: lightgray;
+    -fx-mark-color: black;
+}
+
+.choice-box:hover {
+    -fx-background-color: lightblue;
+}
+
+.choice-box .context-menu {
+    -fx-background-color: white;
+    -fx-border-radius: 5px;
+}
+
+.choice-box .menu-item:focused {
+    -fx-background-color: lightblue;
+}
+
+.choice-box .menu-item:focused > .label {
+    -fx-text-fill: black;
+}
+
+.choice-box .left-container .radio {
+    -fx-background-color: black;
+}
+
+/* endregion */
+
+/* region Slider */
+
+.slider {
+    -fx-snap-to-ticks: true;
+    -fx-block-increment: 1;
+    -fx-minor-tick-count: 0;
+    -fx-major-tick-unit: 1;
+    -fx-show-tick-marks: true;
+}
+
+.slider .track {
+    -fx-background-color: lightgray;
+}
+
+.slider .thumb {
+    -fx-background-color: lightblue;
+}
+
+/* endregion */
+
+/* region GridPane */
+
+.grid-pane {
+    -fx-hgap: 40px;
+    -fx-vgap: 10px;
+}
+
+/* endregion */
+
+/* region Range Slider */
+
+.range-slider {
+    -fx-snap-to-ticks: true;
+    -fx-major-tick-unit: 1;
+    -fx-block-increment: 1;
+    -fx-show-tick-marks: true;
+    -fx-minor-tick-count: 0;
+}
+
+.range-slider .low-thumb, .range-slider .high-thumb, .range-slider .range-bar {
+    -fx-background-color: lightblue;
+}
+
+.range-slider .track {
+    -fx-background-color: lightgray;
+}
+
+/* endregion */
+
+/* region Spinner */
+
+.spinner:focused {
+    -fx-background-color: lightgray;
+    -fx-border-width: 0px;
+}
+
+.spinner > .text-field {
+    -fx-background-color: lightgray;
+}
+
+.spinner > .increment-arrow-button {
+    -fx-background-color: lightgray;
+}
+
+.spinner > .increment-arrow-button:hover {
+    -fx-background-color: lightblue;
+}
+
+.spinner > .increment-arrow-button > .increment-arrow {
+    -fx-background-color: black;
+}
+
+.spinner > .decrement-arrow-button {
+    -fx-background-color: lightgray;
+}
+
+.spinner > .decrement-arrow-button:hover {
+    -fx-background-color: lightblue;
+}
+
+.spinner > .decrement-arrow-button > .decrement-arrow {
+    -fx-background-color: black;
+}
+
+/* endregion */
+
+/* region TableView */
+
+.table-view {
+    -fx-background-color: white;
+}
+
+.table-view > .column-header-background > .nested-column-header > .column-header {
+    -fx-background-color: lightgray;
+}
+
+.table-view > .table-column {
+    -fx-background-color: white;
+}
+
+/* endregion*/
+
+/* region Scrollbars */
+
+.scroll-bar:vertical .track-background {
+    -fx-background-color: white;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: lightgray;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: lightblue;
+}
+
+/* endregion*/
