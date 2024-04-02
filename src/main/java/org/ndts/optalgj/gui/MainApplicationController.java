@@ -69,6 +69,8 @@ public class MainApplicationController {
 	@FXML
 	public TableView<Rectangle> instanceTable;
 	@FXML
+	public TableColumn<Rectangle, Integer> idTableColumn;
+	@FXML
 	public TableColumn<Rectangle, Integer> widthTableColumn;
 	@FXML
 	public TableColumn<Rectangle, Integer> heightTableColumn;
@@ -188,6 +190,7 @@ public class MainApplicationController {
 	}
 
 	private void initializeInstanceInspector() {
+		idTableColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().id()).asObject());
 		widthTableColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().width()).asObject());
 		heightTableColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().height()).asObject());
 	}

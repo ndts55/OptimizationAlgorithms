@@ -1,3 +1,11 @@
+* {
+    -fx-accent-color: #a1c398;
+    -fx-text-color: black;
+    -fx-light-gray: #eaeaea;
+    -fx-medium-gray: lightgray;
+    -fx-control-height: 40;
+}
+
 .root-pane {
     -fx-background-color: white;
 }
@@ -6,25 +14,38 @@
     -fx-padding: 15px;
 }
 
+.subtitle {
+    -fx-font-size: 15px;
+}
+
+.button, .choice-box, .spinner {
+    -fx-pref-height: -fx-control-height;
+    -fx-background-color: -fx-light-gray;
+}
+
 /* region TitledPane */
 
-.titledPane > .title {
+.titled-pane {
+    -fx-collapsible: false;
+}
+
+.titled-pane > .title {
     -fx-font-size: 20px;
     -fx-alignment: center;
 }
 
 .titled-pane > .title > .arrow-button > .arrow {
-    -fx-background-color: gray;
+    -fx-background-color: black;
     -fx-background-insets: 0px;
     -fx-effect: null;
 }
 
 .titled-pane > .title > .arrow-button > .arrow:hover {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-accent-color;
 }
 
 .titled-pane > .title {
-    -fx-background-color: white;
+    -fx-background-color: -fx-medium-gray;
     -fx-alignment: center;
     -fx-font-size: 15px;
     -fx-font-weight: bold;
@@ -41,14 +62,13 @@
 /* region Button */
 
 .button {
-    -fx-background-color: lightgray;
     -fx-border-width: 0px;
-    -fx-padding: 10 5 10 5;
     -fx-font-weight: bold;
 }
 
 .button:hover {
-    -fx-background-color: lightblue;
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: -fx-text-color;
 }
 
 /* endregion */
@@ -56,30 +76,25 @@
 /* region ChoiceBox */
 
 .choice-box {
-    -fx-padding: 5 0 5 0;
-    -fx-background-color: lightgray;
     -fx-mark-color: black;
 }
 
 .choice-box:hover {
-    -fx-background-color: lightblue;
+    -fx-background-color: -fx-accent-color;
+    -fx-mark-color: -fx-text-color;
+    -fx-text-fill: -fx-text-color;
 }
 
-.choice-box .context-menu {
-    -fx-background-color: white;
-    -fx-border-radius: 5px;
+.choice-box .context-menu * .menu-item .label {
+    -fx-text-fill: -fx-text-color;
 }
 
-.choice-box .menu-item:focused {
-    -fx-background-color: lightblue;
+.choice-box .context-menu * .menu-item .left-container > .radio {
+    -fx-background-color: -fx-text-color;
 }
 
-.choice-box .menu-item:focused > .label {
-    -fx-text-fill: black;
-}
-
-.choice-box .left-container .radio {
-    -fx-background-color: black;
+.choice-box .context-menu * .menu-item:hover, .choice-box .context-menu * .menu-item:focused {
+    -fx-background-color: -fx-accent-color;
 }
 
 /* endregion */
@@ -95,11 +110,11 @@
 }
 
 .slider .track {
-    -fx-background-color: lightgray;
+    -fx-background-color: -fx-light-gray;
 }
 
 .slider .thumb {
-    -fx-background-color: lightblue;
+    -fx-background-color: -fx-accent-color;
 }
 
 /* endregion */
@@ -124,48 +139,40 @@
 }
 
 .range-slider .low-thumb, .range-slider .high-thumb, .range-slider .range-bar {
-    -fx-background-color: lightblue;
+    -fx-background-color: -fx-accent-color;
 }
 
 .range-slider .track {
-    -fx-background-color: lightgray;
+    -fx-background-color: -fx-light-gray;
 }
 
 /* endregion */
 
 /* region Spinner */
 
-.spinner:focused {
-    -fx-background-color: lightgray;
-    -fx-border-width: 0px;
+.spinner {
+    -fx-background-color: -fx-light-gray;
 }
 
 .spinner > .text-field {
-    -fx-background-color: lightgray;
+    -fx-background-color: -fx-light-gray;
 }
 
-.spinner > .increment-arrow-button {
-    -fx-background-color: lightgray;
+.spinner:focused {
+    -fx-background-color: -fx-light-gray;
+    -fx-border-width: 0px;
 }
 
-.spinner > .increment-arrow-button:hover {
-    -fx-background-color: lightblue;
+.spinner .increment-arrow-button, .spinner .decrement-arrow-button {
+    -fx-background-color: -fx-light-gray;
 }
 
-.spinner > .increment-arrow-button > .increment-arrow {
-    -fx-background-color: black;
+.spinner .increment-arrow-button .increment-arrow, .spinner .decrement-arrow-button .decrement-arrow {
+    -fx-background-color: -fx-text-color;
 }
 
-.spinner > .decrement-arrow-button {
-    -fx-background-color: lightgray;
-}
-
-.spinner > .decrement-arrow-button:hover {
-    -fx-background-color: lightblue;
-}
-
-.spinner > .decrement-arrow-button > .decrement-arrow {
-    -fx-background-color: black;
+.spinner .increment-arrow-button:hover, .spinner .decrement-arrow-button:hover {
+    -fx-background-color: -fx-accent-color;
 }
 
 /* endregion */
@@ -176,28 +183,38 @@
     -fx-background-color: white;
 }
 
-.table-view > .column-header-background > .nested-column-header > .column-header {
-    -fx-background-color: lightgray;
+.table-view .column-header-background .nested-column-header .column-header, .table-view .column-header-background .filler {
+    -fx-background-color: -fx-light-gray;
+    -fx-text-fill: -fx-text-color;
 }
 
-.table-view > .table-column {
-    -fx-background-color: white;
+.table-row-cell {
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -fx-accent-color;
+    -fx-table-cell-border-color: -fx-accent-color;
+    -fx-text-background-color: -fx-text-color;
 }
 
 /* endregion*/
-
 /* region Scrollbars */
 
-.scroll-bar:vertical .track-background {
+.scroll-bar:vertical > .track-background {
     -fx-background-color: white;
 }
 
-.scroll-bar:vertical .thumb {
-    -fx-background-color: lightgray;
+.scroll-bar:vertical > .thumb {
+    -fx-background-color: -fx-light-gray;
 }
 
-.scroll-bar:vertical .thumb:hover {
-    -fx-background-color: lightblue;
+.scroll-bar:vertical > .thumb:hover, .scroll-bar:vertical > .thumb:focused {
+    -fx-background-color: -fx-accent-color;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: -fx-light-gray;
 }
 
 /* endregion*/

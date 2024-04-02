@@ -60,52 +60,50 @@
             </TitledPane>
             <TitledPane text="Instance Settings" prefWidth="Infinity" styleClass="titled-pane">
                 <VBox prefWidth="Infinity">
-                    <TitledPane text="Box" prefWidth="Infinity" collapsible="false">
-                        <VBox>
-                            <HBox prefWidth="Infinity">
-                                <Label text="Length" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                <VBox HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                <Label fx:id="maxBoxLengthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                            </HBox>
-                            <Region prefHeight="5"/>
-                            <Slider fx:id="maxBoxLength" min="1" max="30" value="20"/>
-                            <Region prefHeight="10"/>
-                        </VBox>
-                    </TitledPane>
-                    <TitledPane text="Rectangle" prefWidth="Infinity" collapsible="false">
-                        <VBox>
-                            <HBox prefWidth="Infinity">
-                                <Label text="Height" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                <Label fx:id="minRectangleHeightInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                <Label fx:id="maxRectangleHeightInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                            </HBox>
-                            <Region prefHeight="5"/>
-                            <RangeSlider fx:id="rectangleHeightRange" min="1" max="30" prefWidth="Infinity" lowValue="1"
-                                         highValue="7"/>
-                            <Region prefHeight="15"/>
-                            <HBox prefWidth="Infinity">
-                                <Label text="Width" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                <Label fx:id="minRectangleWidthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                <Label fx:id="maxRectangleWidthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                            </HBox>
-                            <Region prefHeight="5"/>
-                            <RangeSlider fx:id="rectangleWidthRange" min="1" max="30" prefWidth="Infinity" lowValue="1"
-                                         highValue="7"/>
-                            <Region prefHeight="15"/>
-                            <Label text="Count" prefWidth="Infinity"/>
-                            <Region prefHeight="5"/>
-                            <Spinner fx:id="rectangleCount" prefWidth="Infinity" styleClass="spinner">
-                                <valueFactory>
-                                    <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" initialValue="1000"
-                                                                                    amountToStepBy="1">
-                                        <max>
-                                            <Integer fx:constant="MAX_VALUE"/>
-                                        </max>
-                                    </SpinnerValueFactory.IntegerSpinnerValueFactory>
-                                </valueFactory>
-                            </Spinner>
-                        </VBox>
-                    </TitledPane>
+                    <VBox>
+                        <Label text="Box" maxWidth="Infinity" styleClass="subtitle"/>
+                        <Region prefHeight="5"/>
+                        <HBox prefWidth="Infinity">
+                            <Label text="Length" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <VBox HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Label fx:id="maxBoxLengthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        </HBox>
+                        <Region prefHeight="5"/>
+                        <Slider fx:id="maxBoxLength" min="1" max="30" value="20"/>
+                        <Region prefHeight="15"/>
+                        <Label text="Rectangle" maxWidth="Infinity" styleClass="subtitle"/>
+                        <Region prefHeight="5"/>
+                        <HBox prefWidth="Infinity">
+                            <Label text="Height" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Label fx:id="minRectangleHeightInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Label fx:id="maxRectangleHeightInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        </HBox>
+                        <Region prefHeight="5"/>
+                        <RangeSlider fx:id="rectangleHeightRange" min="1" max="30" prefWidth="Infinity" lowValue="1"
+                                     highValue="7"/>
+                        <Region prefHeight="15"/>
+                        <HBox prefWidth="Infinity">
+                            <Label text="Width" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Label fx:id="minRectangleWidthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Label fx:id="maxRectangleWidthInfo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        </HBox>
+                        <Region prefHeight="5"/>
+                        <RangeSlider fx:id="rectangleWidthRange" min="1" max="30" prefWidth="Infinity" lowValue="1"
+                                     highValue="7"/>
+                        <Region prefHeight="15"/>
+                        <Label text="Count" prefWidth="Infinity"/>
+                        <Region prefHeight="5"/>
+                        <Spinner fx:id="rectangleCount" prefWidth="Infinity" styleClass="spinner">
+                            <valueFactory>
+                                <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" initialValue="1000"
+                                                                                amountToStepBy="1">
+                                    <max>
+                                        <Integer fx:constant="MAX_VALUE"/>
+                                    </max>
+                                </SpinnerValueFactory.IntegerSpinnerValueFactory>
+                            </valueFactory>
+                        </Spinner>
+                    </VBox>
                     <Region prefHeight="15"/>
                     <Button fx:id="generateInstances" onAction="#onGenerateInstances" text="Generate Instances"
                             maxWidth="Infinity"/>
@@ -114,6 +112,7 @@
             <TitledPane text="Instance Inspector" styleClass="titled-pane">
                 <TableView fx:id="instanceTable">
                     <columns>
+                        <TableColumn fx:id="idTableColumn" text="Id"/>
                         <TableColumn fx:id="widthTableColumn" text="Width"/>
                         <TableColumn fx:id="heightTableColumn" text="Height"/>
                     </columns>
