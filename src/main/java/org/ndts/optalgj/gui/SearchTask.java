@@ -15,17 +15,25 @@ public class SearchTask extends Task<Output> {
 	private final Input input;
 	private final LongProperty iteration = new SimpleLongProperty(0);
 
-	public SearchTask(final OptimizationAlgorithm<Input, Output> algorithm, final Input input) {
+	public SearchTask(final OptimizationAlgorithm<Input, Output> algorithm,
+			  final Input input) {
 		this.algorithm = algorithm;
 		this.input = input;
 	}
 
 	public SearchTask(final LocalNeighborhoodVariant neighborhoodVariant, Input input) {
-		this(new LocalSearch<>(new SimpleSolutionConstructor(), new BoxCountMinimization(),
+		this(new LocalSearch<>(new SimpleSolutionConstructor(),
 			switch (neighborhoodVariant) {
-				case LocalNeighborhoodVariant.Geometric -> new GeometricNeighborhood();
+				case Geometric -> new BoxCountMinimization();
+				case Overlap -> new BoxCountAndOverlaps();
+				case Rules -> throw new UnsupportedOperationException();
+			},
+			switch (neighborhoodVariant) {
+				case LocalNeighborhoodVariant.Geometric ->
+					new GeometricNeighborhood();
 				case LocalNeighborhoodVariant.Overlap -> new OverlapNeighborhood();
-				case LocalNeighborhoodVariant.Rules -> throw new UnsupportedOperationException();
+				case LocalNeighborhoodVariant.Rules ->
+					throw new UnsupportedOperationException();
 			}), input);
 	}
 

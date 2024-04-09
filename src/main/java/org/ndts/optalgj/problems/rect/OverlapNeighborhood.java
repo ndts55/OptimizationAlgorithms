@@ -11,41 +11,54 @@ dafür sorgen, dass schlussendlich eine garantiert überlappungsfreie Lösung en
 
 import org.ndts.optalgj.algs.ObjectiveFunction;
 
-import java.util.Optional;
-
-// TODO implement geometric neighborhood with overlap for local search
 public class OverlapNeighborhood extends GeometricNeighborhood {
-	private static final double OVERLAP_STEP = 0.5;
-	private double overlap = 100.0;
+	private final static double ZERO_SNAP_THRESHOLD = 0.001;
+	private double overlap = 1.0;
 
 	@Override
 	public Output betterNeighbor(Output initial, ObjectiveFunction<Output> obj) {
 		final var result = super.betterNeighbor(initial, obj);
-		if (result != null) {
-			overlap -= OVERLAP_STEP;
+		final var resultIsNull = result == null;
+		final var overlapsExistInInitial = initial.hasOverlaps();
+		if (resultIsNull)
+			if (overlapsExistInInitial) {
+				// TODO maybe target boxes with overlaps directly?
+				// IDEAS
+				// - split box with overlaps into two boxes without overlaps
+				// - move rectangle with a lot of overlap to another overlap-free position
+				calculateNextOverlap(true);
+				return initial;
+			} else return null;
+		else {
+			calculateNextOverlap(false);
 			return result;
 		}
-		final var overlapBoxIndex = firstBoxIndexWithOverlaps(initial);
-		if (overlapBoxIndex.isEmpty()) return null;
-		// Algorithm wants to terminate but there are still some overlaps.
-		overlap -= OVERLAP_STEP;
-		overlap /= 2;
-		return initial;
 	}
 
-	private Optional<Integer> firstBoxIndexWithOverlaps(final Output output) {
-		for (var i = 0; i < output.boxes().size(); i += 1)
-			if (output.boxes().get(i).hasOverlaps()) return Optional.of(i);
-		return Optional.empty();
+	private void calculateNextOverlap(final boolean sharp) {
+		// TODO think of a good way to decrease the overlap over time
+		// IDEAS
+		// - decrease a fixed amount on every call
+		// - set to zero if sharp
+		// - decrease a percentage on every call -> could multiply by ~0.95
+		// - set to percentage of iterations so far with regard to a max number of
+		// iterations where overlap is allowed
+		// - snap to zero when close enough
+		if (overlap == 0) return;
+		if (sharp || overlap < ZERO_SNAP_THRESHOLD) {
+			overlap = 0;
+			return;
+		}
+		overlap *= 0.95;
 	}
 
 	@Override
 	protected boolean canFitInSame(final int rectangleIndex, final Box box) {
-		return super.canFitInSame(rectangleIndex, box) || box.overlapAt(rectangleIndex) <= overlap;
+		return super.canFitInSame(rectangleIndex, box) || box.overlapPercentageAt(rectangleIndex) <= overlap;
 	}
 
 	@Override
 	protected boolean canFitInOther(final PositionedRectangle rectangle, final Box box) {
-		return super.canFitInOther(rectangle, box) || box.possibleOverlap(rectangle) <= overlap;
+		return super.canFitInOther(rectangle, box) || box.possibleOverlapPercentage(rectangle) <= overlap;
 	}
 }

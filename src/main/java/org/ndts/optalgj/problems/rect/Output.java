@@ -7,8 +7,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public record Output(int boxLength,
-					 List<Box> boxes) implements CopyConstructible<Output>, Iterable<Box> {
+		     List<Box> boxes) implements CopyConstructible<Output>, Iterable<Box> {
 
+	/**
+	 * Copy-constructor
+	 *
+	 * @param output Output from which to copy data.
+	 */
 	public Output(final Output output) {
 		this(output.boxLength, new ArrayList<>(output.boxes.size()));
 		for (var box : output.boxes) boxes.add(new Box(box));
@@ -22,5 +27,14 @@ public record Output(int boxLength,
 	@Override
 	public Iterator<Box> iterator() {
 		return boxes.iterator();
+	}
+
+	/**
+	 * @return Whether any Box in this Output contains any overlaps.
+	 */
+	public boolean hasOverlaps() {
+		for (var box : this)
+			if (box.hasOverlaps()) return true;
+		return false;
 	}
 }

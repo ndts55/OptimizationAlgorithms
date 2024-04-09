@@ -3,6 +3,7 @@ module org.ndts.optalgj {
 	requires javafx.fxml;
 
 	requires org.controlsfx.controls;
+	requires java.desktop;
 
 	opens org.ndts.optalgj to javafx.fxml;
 	exports org.ndts.optalgj;

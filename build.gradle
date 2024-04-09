@@ -13,10 +13,6 @@ repositories {
     mavenCentral()
 }
 
-ext {
-    junitVersion = '5.10.0'
-}
-
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
@@ -34,8 +30,8 @@ javafx {
 dependencies {
     implementation('org.controlsfx:controlsfx:11.2.0')
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 test {
