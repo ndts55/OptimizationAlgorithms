@@ -25,11 +25,9 @@ enum GeometricAction {
 public class GeometricNeighborhood implements Neighborhood<Output> {
 	// region protected Attributes
 	protected final Comparator<Box> boxComparator = Comparator.comparingInt(Box::size);
-	// endregion
 	protected final AtomicBoolean cancelled = new AtomicBoolean(false);
 	protected long lastSignificantImprovement = 0;
 	protected long currentIteration = 0;
-
 	// endregion
 
 	// region Constants (but as functions)
@@ -55,7 +53,7 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 	@Override
 	public Output betterNeighbor(final Output initial, final ObjectiveFunction<Output> obj) {
 		var initialEvaluation = obj.evaluate(initial);
-		var output = findBetterNeighbor(initial, obj);
+		var output = findBetterNeighbor(initial, initialEvaluation, obj);
 		var outputEvaluation = obj.evaluate(output);
 		if (outputEvaluation < initialEvaluation) lastSignificantImprovement = currentIteration;
 		if ((currentIteration - lastSignificantImprovement) >= stallThreshold()) return null;
@@ -64,8 +62,8 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 	}
 
 	protected Output findBetterNeighbor(final Output initial,
+										final double initialEvaluation,
 										final ObjectiveFunction<Output> obj) {
-		final var initialEvaluation = obj.evaluate(initial);
 		var output = new Output(initial);
 		final var maxActionCount = maxActionCount();
 		for (var i = 0; !isCancelled() && obj.evaluate(output) >= initialEvaluation && i < maxActionCount; i++)
@@ -176,16 +174,6 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 				}
 			box0.rectangles().removeAll(toRemove);
 		}
-
-//		final var box1 = output.boxes().get(1);
-//		final var toRemove = new ArrayList<PositionedRectangle>();
-//		for (var rectangle : box0)
-//			if (totalBoxArea - box1.occupiedArea() >= rectangle.area() && tryToFit(rectangle, box1
-//				, output.boxLength())) {
-//				box1.add(rectangle);
-//				toRemove.add(rectangle);
-//			}
-//		box0.rectangles().removeAll(toRemove);
 		if (box0.size() == 0) output.boxes().removeFirst();
 	}
 	// endregion

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public record Box(List<PositionedRectangle> rectangles) implements Iterable<PositionedRectangle> {
+	public Box() {this(new ArrayList<>());}
 
 	/**
 	 * Copy-constructor

@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public record Output(int boxLength,
 					 List<Box> boxes) implements CopyConstructible<Output>, Iterable<Box> {
-
 	/**
 	 * Copy-constructor
 	 *
@@ -28,13 +27,6 @@ public record Output(int boxLength,
 	@Override
 	public Iterator<Box> iterator() {
 		return boxes.iterator();
-	}
-
-	/**
-	 * @return Whether any Box in this Output contains any overlaps.
-	 */
-	public boolean hasOverlaps() {
-		return firstBoxWithOverlap().isPresent();
 	}
 
 	/**

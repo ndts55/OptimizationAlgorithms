@@ -48,12 +48,12 @@ public class OverlapNeighborhood extends GeometricNeighborhood {
 		// - move rectangle with a lot of overlap to another overlap-free position
 		final var output = new Output(result);
 		final var offendingBox = output.boxes().remove(overlapIndex);
-		final var newBoxes = new ArrayList<Box>() {{add(new Box(new ArrayList<>()));}};
+		final var newBoxes = new ArrayList<Box>() {{add(new Box());}};
 		var nbi = 0;
 		for (var rectangle : offendingBox) {
 			while (!isCancelled() &&
 				!tryToFit(rectangle, newBoxes.get(nbi), output.boxLength())) {
-				newBoxes.add(new Box(new ArrayList<>()));
+				newBoxes.add(new Box());
 				nbi += 1;
 			}
 			newBoxes.get(nbi).add(rectangle);
