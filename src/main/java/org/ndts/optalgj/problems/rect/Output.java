@@ -5,9 +5,10 @@ import org.ndts.optalgj.algs.CopyConstructible;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 public record Output(int boxLength,
-		     List<Box> boxes) implements CopyConstructible<Output>, Iterable<Box> {
+					 List<Box> boxes) implements CopyConstructible<Output>, Iterable<Box> {
 
 	/**
 	 * Copy-constructor
@@ -33,8 +34,15 @@ public record Output(int boxLength,
 	 * @return Whether any Box in this Output contains any overlaps.
 	 */
 	public boolean hasOverlaps() {
-		for (var box : this)
-			if (box.hasOverlaps()) return true;
-		return false;
+		return firstBoxWithOverlap().isPresent();
+	}
+
+	/**
+	 * @return The index of the first Box with overlaps or None.
+	 */
+	public Optional<Integer> firstBoxWithOverlap() {
+		for (var i = 0; i < boxes.size(); i += 1)
+			if (boxes.get(i).hasOverlaps()) return Optional.of(i);
+		return Optional.empty();
 	}
 }

@@ -11,32 +11,26 @@ dafür sorgen, dass schlussendlich eine garantiert überlappungsfreie Lösung en
 
 import org.ndts.optalgj.algs.ObjectiveFunction;
 
+import java.util.ArrayList;
+
 public class OverlapNeighborhood extends GeometricNeighborhood {
 	private final static double ZERO_SNAP_THRESHOLD = 0.001;
 	private double overlap = 1.0;
 
 	@Override
-	public Output betterNeighbor(Output initial, ObjectiveFunction<Output> obj) {
+	public Output betterNeighbor(final Output initial, final ObjectiveFunction<Output> obj) {
 		final var result = super.betterNeighbor(initial, obj);
 		final var resultIsNull = result == null;
-		final var overlapsExistInInitial = initial.hasOverlaps();
-		if (resultIsNull)
-			if (overlapsExistInInitial) {
-				// TODO maybe target boxes with overlaps directly?
-				// IDEAS
-				// - split box with overlaps into two boxes without overlaps
-				// - move rectangle with a lot of overlap to another overlap-free position
-				calculateNextOverlap(true);
-				return initial;
-			} else return null;
-		else {
-			calculateNextOverlap(false);
-			return result;
+		final var nonNullOutput = resultIsNull ? initial : result;
+		if (overlap == 0) {
+			return nonNullOutput.firstBoxWithOverlap().map(i -> targetOverlap(nonNullOutput, i)).orElse(result);
+		} else {
+			calculateNextOverlap(resultIsNull);
+			return nonNullOutput;
 		}
 	}
 
 	private void calculateNextOverlap(final boolean sharp) {
-		// TODO think of a good way to decrease the overlap over time
 		// IDEAS
 		// - decrease a fixed amount on every call
 		// - set to zero if sharp
@@ -44,12 +38,34 @@ public class OverlapNeighborhood extends GeometricNeighborhood {
 		// - set to percentage of iterations so far with regard to a max number of
 		// iterations where overlap is allowed
 		// - snap to zero when close enough
-		if (overlap == 0) return;
-		if (sharp || overlap < ZERO_SNAP_THRESHOLD) {
-			overlap = 0;
-			return;
+		if (sharp || overlap < ZERO_SNAP_THRESHOLD) overlap = 0;
+		else overlap *= 0.95;
+	}
+
+	private Output targetOverlap(final Output result, final int overlapIndex) {
+		// IDEAS
+		// - split box with overlaps into multiple boxes without overlaps
+		// - move rectangle with a lot of overlap to another overlap-free position
+		final var output = new Output(result);
+		final var offendingBox = output.boxes().remove(overlapIndex);
+		final var newBoxes = new ArrayList<Box>() {{add(new Box(new ArrayList<>()));}};
+		var nbi = 0;
+		for (var rectangle : offendingBox) {
+			while (!isCancelled() &&
+				!tryToFit(rectangle, newBoxes.get(nbi), output.boxLength())) {
+				newBoxes.add(new Box(new ArrayList<>()));
+				nbi += 1;
+			}
+			newBoxes.get(nbi).add(rectangle);
 		}
-		overlap *= 0.95;
+		newBoxes.sort(boxComparator);
+		var i = output.boxes().size() - 1;
+		while (!newBoxes.isEmpty()) {
+			final var box = newBoxes.removeLast();
+			while (i > 0 && boxComparator.compare(box, output.boxes().get(i)) >= 0) i -= 1;
+			output.boxes().add(i, box);
+		}
+		return output;
 	}
 
 	@Override

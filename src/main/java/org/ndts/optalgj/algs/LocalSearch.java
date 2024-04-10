@@ -1,7 +1,6 @@
 package org.ndts.optalgj.algs;
 
 public class LocalSearch<Input, Output extends CopyConstructible<Output>> implements OptimizationAlgorithm<Input, Output> {
-	private static final long MAX_ITERATIONS_WITHOUT_IMPROVEMENT = 1000;
 	private final FeasibleSolutions<Input, Output> feasibleSolutions;
 	private final ObjectiveFunction<Output> obj;
 	private final Neighborhood<Output> neighborhood;
@@ -26,11 +25,8 @@ public class LocalSearch<Input, Output extends CopyConstructible<Output>> implem
 	public boolean iteration() {
 		currentSolution = neighborhood.betterNeighbor(currentSolution, obj);
 		if (currentSolution == null) return false;
-		var currentEvaluation = obj.evaluate(currentSolution);
-		var bestEvaluation = obj.evaluate(bestSolution);
-		if (currentEvaluation < bestEvaluation) {
+		if (obj.evaluate(currentSolution) < obj.evaluate(bestSolution))
 			bestSolution = currentSolution.copy();
-		}
 		return true;
 	}
 

@@ -23,15 +23,20 @@ enum GeometricAction {
 }
 
 public class GeometricNeighborhood implements Neighborhood<Output> {
-	// region Constants
-	private static final long STALL_THRESHOLD = 1000;
-	private static final int MAX_ACTION_COUNT = 1000;
+	// region protected Attributes
+	protected final Comparator<Box> boxComparator = Comparator.comparingInt(Box::size);
 	// endregion
-
-	// region Private Attributes
-	private final AtomicBoolean cancelled = new AtomicBoolean(false);
+	protected final AtomicBoolean cancelled = new AtomicBoolean(false);
 	protected long lastSignificantImprovement = 0;
 	protected long currentIteration = 0;
+
+	// endregion
+
+	// region Constants (but as functions)
+	protected int maxActionCount() {return 200;}
+
+	protected long stallThreshold() {return 100;}
+
 	// endregion
 
 	// region Cancellation
@@ -53,7 +58,7 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		var output = findBetterNeighbor(initial, obj);
 		var outputEvaluation = obj.evaluate(output);
 		if (outputEvaluation < initialEvaluation) lastSignificantImprovement = currentIteration;
-		if ((currentIteration - lastSignificantImprovement) >= STALL_THRESHOLD) return null;
+		if ((currentIteration - lastSignificantImprovement) >= stallThreshold()) return null;
 		currentIteration += 1;
 		return output;
 	}
@@ -61,27 +66,31 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 	protected Output findBetterNeighbor(final Output initial,
 										final ObjectiveFunction<Output> obj) {
 		final var initialEvaluation = obj.evaluate(initial);
-		var output = initial.copy();
-		for (var i = 0; !isCancelled() && obj.evaluate(output) >= initialEvaluation && i < MAX_ACTION_COUNT; i++)
+		var output = new Output(initial);
+		final var maxActionCount = maxActionCount();
+		for (var i = 0; !isCancelled() && obj.evaluate(output) >= initialEvaluation && i < maxActionCount; i++)
 			switch (GeometricAction.values()[RNG.nextIndex(GeometricAction.values().length)]) {
 				case MoveWithin -> moveRectangleInBox(output, 100);
 				case MoveBetween -> moveRectangleToOtherBox(output);
-				case Merge -> mergeSmallestBoxes(output);
+				case Merge -> redistributeSmallestBox(output);
 			}
-		output.boxes().sort(Comparator.comparingInt(Box::size));
+		sortOutput(output);
 		return output;
+	}
+
+	protected void sortOutput(final Output output) {
+		output.boxes().sort(boxComparator);
 	}
 	// endregion
 
 	// region Move Rectangle in Box
-	private boolean moveRectangleInBox(final Output output, int attempts) {
+	protected void moveRectangleInBox(final Output output, int attempts) {
 		for (var i = 0; !isCancelled() && i < attempts; i++) {
-			if (attemptToMoveRectangleInBox(output)) return true;
+			if (attemptToMoveRectangleInBox(output)) return;
 		}
-		return false;
 	}
 
-	private boolean attemptToMoveRectangleInBox(final Output output) {
+	protected boolean attemptToMoveRectangleInBox(final Output output) {
 		final var box = pickRandomBox(output);
 		if (box.size() == 1) {
 			final var r = box.get(0);
@@ -99,28 +108,30 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		// move rectangle to the smallest position
 		final var boxLength = output.boxLength();
 		for (var col = 0; !isCancelled() && col < rectangle.x(); col++)
-			if (rectangle.y() != col) for (var row = 0; row < rectangle.y(); row++) {
-				rectangle.transformTo(col, row);
-				var fits = !rectangle.outOfBounds(boxLength) && canFitInSame(rectangleIndex, box);
-				if (fits) return true;
-				rectangle.rotate();
-				fits = !rectangle.outOfBounds(boxLength) && canFitInSame(rectangleIndex, box);
-				if (fits) return true;
-				rectangle.rotate();
-			}
+			if (rectangle.y() != col)
+				for (var row = 0; row < rectangle.y(); row++) {
+					rectangle.transformTo(col, row);
+					var fits = !rectangle.outOfBounds(boxLength) && canFitInSame(rectangleIndex,
+						box);
+					if (fits) return true;
+					rectangle.rotate();
+					fits = !rectangle.outOfBounds(boxLength) && canFitInSame(rectangleIndex, box);
+					if (fits) return true;
+					rectangle.rotate();
+				}
 		rectangle.transformTo(backupX, backupY);
 		return false;
 	}
 	// endregion
 
 	// region Move Rectangle to Other Box
-	private boolean moveRectangleToOtherBox(final Output output) {
-		if (output.boxes().size() <= 1) return false;// no other box exists
+	protected void moveRectangleToOtherBox(final Output output) {
+		if (output.boxes().size() <= 1) return;// no other box exists
 		final var sourceBox = pickSourceBox(output);
 		var destinationBox = pickRandomBox(output);
 		while (!isCancelled() && sourceBox == destinationBox)
 			destinationBox = pickRandomBox(output);
-		if (isCancelled()) return false;
+		if (isCancelled()) return;
 		final var rectangleIndex = RNG.nextIndex(sourceBox.size());
 		final var rectangle = sourceBox.get(rectangleIndex);
 		final var freeBoxArea =
@@ -131,10 +142,9 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 			destinationBox.add(sourceBox.remove(rectangleIndex));
 			if (sourceBox.size() == 0) output.boxes().remove(sourceBox);
 		}
-		return true;
 	}
 
-	private Box pickSourceBox(final Output output) {
+	protected Box pickSourceBox(final Output output) {
 		// pick multiple random boxes and pick the one with the fewest number of rectangles
 		final var n = output.boxes().size();
 		final var firstBox = output.boxes().get(RNG.nextIndex(n / 2));
@@ -143,32 +153,45 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		else return firstBox;
 	}
 
-	private Box pickRandomBox(final Output o) {
+	protected Box pickRandomBox(final Output o) {
 		return o.boxes().get(RNG.nextIndex(o.boxes().size()));
 	}
 	// endregion
 
-	// region Merge Smallest Boxes
-	private boolean mergeSmallestBoxes(final Output output) {
-		if (output.boxes().size() <= 1) return false;
+	// region Redistribute Smallest Box
+	protected void redistributeSmallestBox(final Output output) {
+		if (output.boxes().size() <= 1) return;
 		final var box0 = output.boxes().getFirst();
-		final var box1 = output.boxes().get(1);
 		final var totalBoxArea = output.boxLength() * output.boxLength();
-		var toRemove = new ArrayList<PositionedRectangle>();
-		for (var rectangle : box0)
-			if (totalBoxArea - box1.occupiedArea() >= rectangle.area() && tryToFit(rectangle, box1
-				, output.boxLength())) {
-				box1.add(rectangle);
-				toRemove.add(rectangle);
-			}
-		box0.rectangles().removeAll(toRemove);
+
+		for (var i = 1; box0.size() > 0 && i < output.boxes().size(); i += 1) {
+			final var box1 = output.boxes().get(i);
+			final var toRemove = new ArrayList<PositionedRectangle>();
+			for (var rectangle : box0)
+				if (totalBoxArea - box1.occupiedArea() >= rectangle.area() && tryToFit(rectangle,
+					box1
+					, output.boxLength())) {
+					box1.add(rectangle);
+					toRemove.add(rectangle);
+				}
+			box0.rectangles().removeAll(toRemove);
+		}
+
+//		final var box1 = output.boxes().get(1);
+//		final var toRemove = new ArrayList<PositionedRectangle>();
+//		for (var rectangle : box0)
+//			if (totalBoxArea - box1.occupiedArea() >= rectangle.area() && tryToFit(rectangle, box1
+//				, output.boxLength())) {
+//				box1.add(rectangle);
+//				toRemove.add(rectangle);
+//			}
+//		box0.rectangles().removeAll(toRemove);
 		if (box0.size() == 0) output.boxes().removeFirst();
-		return !toRemove.isEmpty();
 	}
 	// endregion
 
 	// region Utils
-	private boolean tryToFit(PositionedRectangle rectangle, Box box, int boxLength) {
+	protected boolean tryToFit(PositionedRectangle rectangle, Box box, int boxLength) {
 		final var backupX = rectangle.x();
 		final var backupY = rectangle.y();
 		final var backupRotated = rectangle.rotated();
