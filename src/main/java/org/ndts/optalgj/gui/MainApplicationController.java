@@ -18,8 +18,8 @@ import org.controlsfx.control.RangeSlider;
 import org.ndts.optalgj.algs.AlgorithmVariant;
 import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;
 import org.ndts.optalgj.algs.LocalNeighborhoodVariant;
-import org.ndts.optalgj.problems.rect.Box;
 import org.ndts.optalgj.problems.rect.Input;
+import org.ndts.optalgj.problems.rect.InstanceGenerator;
 import org.ndts.optalgj.problems.rect.Rectangle;
 
 import java.text.DecimalFormat;
@@ -138,13 +138,7 @@ public class MainApplicationController {
 		};
 		service.valueProperty().addListener((a, b, newValue) -> drawOutput(newValue, canvas));
 		service.valueProperty().addListener((a, b, newValue) -> boxCountInfo.setText(String.valueOf(newValue.boxes().size())));
-		service.valueProperty().addListener((a, b, newValue) -> {
-			final var totalArea =
-				(double) newValue.boxLength() * newValue.boxLength() * newValue.boxes().size();
-			final var occupiedArea =
-				(double) newValue.boxes().stream().mapToInt(Box::occupiedArea).sum();
-			spaceInfo.setText(spaceInfoFormat.format(occupiedArea / totalArea));
-		});
+		service.valueProperty().addListener((a, b, newValue) -> spaceInfo.setText(spaceInfoFormat.format(newValue.usedSpace())));
 		service.iterationProperty().addListener((a, b, newValue) -> Platform.runLater(() -> iterationCountInfo.setText(String.valueOf(newValue))));
 		service.setOnSucceeded(e -> Platform.runLater(() -> {
 			drawOutput(service.getValue(), canvas);

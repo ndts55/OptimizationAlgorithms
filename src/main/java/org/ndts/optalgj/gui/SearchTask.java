@@ -43,10 +43,6 @@ public class SearchTask extends Task<Output> {
 		return iteration;
 	}
 
-	private void countIteration() {
-		iteration.set(iteration.get() + 1);
-	}
-
 	@Override
 	protected Output call() {
 		algorithm.initialize(input);
@@ -60,7 +56,7 @@ public class SearchTask extends Task<Output> {
 			}
 			// TODO call updateValue every X ms instead of on every iteration
 			if (progressed) updateValue(algorithm.currentOutput());
-			countIteration();
+			iteration.set(algorithm.currentIteration());
 		} while (!isCancelled() && progressed);
 		return algorithm.bestOutput();
 	}

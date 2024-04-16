@@ -37,4 +37,12 @@ public record Output(int boxLength,
 			if (boxes.get(i).hasOverlaps()) return Optional.of(i);
 		return Optional.empty();
 	}
+
+	public double usedSpace() {
+		final var totalArea =
+			(double) boxLength() * boxLength() * boxes().size();
+		final var occupiedArea =
+			(double) boxes().stream().mapToInt(Box::occupiedArea).sum();
+		return occupiedArea / totalArea;
+	}
 }

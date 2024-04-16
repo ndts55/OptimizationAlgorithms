@@ -1,6 +1,5 @@
-package org.ndts.optalgj.gui;
+package org.ndts.optalgj.problems.rect;
 
-import org.ndts.optalgj.problems.rect.Rectangle;
 import org.ndts.optalgj.utils.RNG;
 
 import java.util.ArrayList;

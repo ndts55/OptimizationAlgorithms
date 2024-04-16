@@ -51,8 +51,7 @@ public class OverlapNeighborhood extends GeometricNeighborhood {
 		final var newBoxes = new ArrayList<Box>() {{add(new Box());}};
 		var nbi = 0;
 		for (var rectangle : offendingBox) {
-			while (!isCancelled() &&
-				!tryToFit(rectangle, newBoxes.get(nbi), output.boxLength())) {
+			while (!isCancelled() && !tryToFit(newBoxes.get(nbi), rectangle, output.boxLength())) {
 				newBoxes.add(new Box());
 				nbi += 1;
 			}
@@ -69,12 +68,12 @@ public class OverlapNeighborhood extends GeometricNeighborhood {
 	}
 
 	@Override
-	protected boolean canFitInSame(final int rectangleIndex, final Box box) {
-		return super.canFitInSame(rectangleIndex, box) || box.overlapPercentageAt(rectangleIndex) <= overlap;
+	protected boolean canFitInSame(final Box box, final int rectangleIndex) {
+		return super.canFitInSame(box, rectangleIndex) || box.overlapPercentageAt(rectangleIndex) <= overlap;
 	}
 
 	@Override
-	protected boolean canFitInOther(final PositionedRectangle rectangle, final Box box) {
-		return super.canFitInOther(rectangle, box) || box.possibleOverlapPercentage(rectangle) <= overlap;
+	protected boolean canFitInOther(final Box box, final PositionedRectangle rectangle) {
+		return super.canFitInOther(box, rectangle) || box.possibleOverlapPercentage(rectangle) <= overlap;
 	}
 }

@@ -1,5 +1,5 @@
 package org.ndts.optalgj.algs;
 
-public interface FeasibleSolutions<Input, Output> {
+public interface SolutionConstructor<Input, Output> {
 	Output arbitrarySolution(Input input);
 }

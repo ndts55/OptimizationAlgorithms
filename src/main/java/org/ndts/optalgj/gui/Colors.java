@@ -8,7 +8,7 @@ import java.util.Map;
 public class Colors {
 	// TODO pick colors that are more different to each other
 	private static final Color[] colors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW,
-		Color.GREEN, Color.BLUE, Color.INDIGO, Color.PURPLE,};
+		Color.GREEN, Color.BLUE, Color.PURPLE,};
 	private static final Map<Integer, Color> map = new HashMap<>(1000);
 	private static int index = 0;
 

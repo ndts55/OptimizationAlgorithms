@@ -14,12 +14,12 @@ in einem Quadrat der Länge L platziert sein. Diese Quadrate heißen Boxen im Fo
 ist die Anzahl der Boxen, die Sie benötigen, um alle Rechtecke darin zu platzieren.
 */
 
-import org.ndts.optalgj.algs.FeasibleSolutions;
+import org.ndts.optalgj.algs.SolutionConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleSolutionConstructor implements FeasibleSolutions<Input, Output> {
+public class SimpleSolutionConstructor implements SolutionConstructor<Input, Output> {
 	@Override
 	public Output arbitrarySolution(Input rectangleInput) {
 		// simplest valid solution is to put each rectangle in its own box

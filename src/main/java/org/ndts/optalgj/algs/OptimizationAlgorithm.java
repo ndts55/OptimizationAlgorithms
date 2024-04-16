@@ -22,4 +22,6 @@ public interface OptimizationAlgorithm<Input, Output> {
 	 * @return Current output.
 	 */
 	Output currentOutput();
+
+	int currentIteration();
 }

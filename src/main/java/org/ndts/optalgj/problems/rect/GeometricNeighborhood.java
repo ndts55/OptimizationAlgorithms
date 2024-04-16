@@ -1,12 +1,11 @@
 package org.ndts.optalgj.problems.rect;
 
-import org.ndts.optalgj.algs.Neighborhood;
 import org.ndts.optalgj.algs.ObjectiveFunction;
+import org.ndts.optalgj.utils.Fits;
 import org.ndts.optalgj.utils.RNG;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /*
 Ein Nachbar lässt sich erzeugen, indem Rechtecke direkt verschoben werden, sowohl innerhalb einer
@@ -22,47 +21,22 @@ enum GeometricAction {
 	MoveWithin, MoveBetween, Merge
 }
 
-public class GeometricNeighborhood implements Neighborhood<Output> {
+public class GeometricNeighborhood extends LocalSearchNeighborhood {
 	// region protected Attributes
 	protected final Comparator<Box> boxComparator = Comparator.comparingInt(Box::size);
-	protected final AtomicBoolean cancelled = new AtomicBoolean(false);
-	protected long lastSignificantImprovement = 0;
-	protected long currentIteration = 0;
 	// endregion
 
 	// region Constants (but as functions)
 	protected int maxActionCount() {return 200;}
 
-	protected long stallThreshold() {return 100;}
-
-	// endregion
-
-	// region Cancellation
 	@Override
-	public void cancel() {
-		cancelled.setRelease(true);
-	}
+	protected long stallThreshold() {return 200;}
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled.getAcquire();
-	}
 	// endregion
 
 	// region Better Neighbor
 	@Override
-	public Output betterNeighbor(final Output initial, final ObjectiveFunction<Output> obj) {
-		var initialEvaluation = obj.evaluate(initial);
-		var output = findBetterNeighbor(initial, initialEvaluation, obj);
-		var outputEvaluation = obj.evaluate(output);
-		if (outputEvaluation < initialEvaluation) lastSignificantImprovement = currentIteration;
-		if ((currentIteration - lastSignificantImprovement) >= stallThreshold()) return null;
-		currentIteration += 1;
-		return output;
-	}
-
-	protected Output findBetterNeighbor(final Output initial,
-										final double initialEvaluation,
+	protected Output findBetterNeighbor(final Output initial, final double initialEvaluation,
 										final ObjectiveFunction<Output> obj) {
 		var output = new Output(initial);
 		final var maxActionCount = maxActionCount();
@@ -105,18 +79,16 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		final var backupY = rectangle.y();
 		// move rectangle to the smallest position
 		final var boxLength = output.boxLength();
-		for (var col = 0; !isCancelled() && col < rectangle.x(); col++)
-			if (rectangle.y() != col)
-				for (var row = 0; row < rectangle.y(); row++) {
-					rectangle.transformTo(col, row);
-					var fits = !rectangle.outOfBounds(boxLength) && canFitInSame(rectangleIndex,
-						box);
-					if (fits) return true;
-					rectangle.rotate();
-					fits = !rectangle.outOfBounds(boxLength) && canFitInSame(rectangleIndex, box);
-					if (fits) return true;
-					rectangle.rotate();
-				}
+		for (var col = 0; !isCancelled() && col < backupX; col++)
+			for (var row = 0; row < backupY; row++) {
+				rectangle.transformTo(col, row);
+				var fits = !rectangle.outOfBounds(boxLength) && canFitInSame(box, rectangleIndex);
+				if (fits) return true;
+				rectangle.rotate();
+				fits = !rectangle.outOfBounds(boxLength) && canFitInSame(box, rectangleIndex);
+				if (fits) return true;
+				rectangle.rotate();
+			}
 		rectangle.transformTo(backupX, backupY);
 		return false;
 	}
@@ -134,7 +106,7 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 		final var rectangle = sourceBox.get(rectangleIndex);
 		final var freeBoxArea =
 			(output.boxLength() * output.boxLength()) - destinationBox.occupiedArea();
-		if (freeBoxArea >= rectangle.area() && tryToFit(rectangle, destinationBox,
+		if (freeBoxArea >= rectangle.area() && tryToFit(destinationBox, rectangle,
 			output.boxLength())) {
 			// move from source to destination
 			destinationBox.add(sourceBox.remove(rectangleIndex));
@@ -166,9 +138,8 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 			final var box1 = output.boxes().get(i);
 			final var toRemove = new ArrayList<PositionedRectangle>();
 			for (var rectangle : box0)
-				if (totalBoxArea - box1.occupiedArea() >= rectangle.area() && tryToFit(rectangle,
-					box1
-					, output.boxLength())) {
+				if (totalBoxArea - box1.occupiedArea() >= rectangle.area() && tryToFit(box1,
+					rectangle, output.boxLength())) {
 					box1.add(rectangle);
 					toRemove.add(rectangle);
 				}
@@ -179,49 +150,15 @@ public class GeometricNeighborhood implements Neighborhood<Output> {
 	// endregion
 
 	// region Utils
-	protected boolean tryToFit(PositionedRectangle rectangle, Box box, int boxLength) {
-		final var backupX = rectangle.x();
-		final var backupY = rectangle.y();
-		final var backupRotated = rectangle.rotated();
-		final var smallerRectangleSide = Math.min(rectangle.width(), rectangle.height());
-		final var maxRow = boxLength - smallerRectangleSide;
-		var fits = false;
-		for (var row = 0; !isCancelled() && row < maxRow; row += 1) {
-			if (row + rectangle.height() < boxLength) {
-				// check regular
-				for (var col = 0; !fits && col < boxLength - rectangle.width(); col += 1) {
-					rectangle.transformTo(col, row);
-					if (rectangle.outOfBounds(boxLength)) continue;
-					fits = canFitInOther(rectangle, box);
-				}
-				// found a fitting configuration
-				if (fits) break;
-
-			}
-			// fits is still false at this point
-			if (row + rectangle.width() < boxLength) {
-				// check rotated
-				rectangle.rotate();
-				for (var col = 0; !fits && col < boxLength - rectangle.width(); col += 1) {
-					rectangle.transformTo(col, row);
-					if (rectangle.outOfBounds(boxLength)) continue;
-					fits = canFitInOther(rectangle, box);
-				}
-				// rotate back if no fit was found
-				if (fits) break;
-				else rectangle.rotate();
-
-			}
-		}
-		if (!fits) rectangle.transformTo(backupX, backupY, backupRotated);
-		return fits;
+	protected boolean tryToFit(final Box box, final PositionedRectangle rectangle, int boxLength) {
+		return Fits.tryToFit(box, rectangle, boxLength, this::isCancelled, this::canFitInOther);
 	}
 
-	protected boolean canFitInSame(final int rectangleIndex, final Box box) {
+	protected boolean canFitInSame(final Box box, final int rectangleIndex) {
 		return !box.overlapExistsAt(rectangleIndex);
 	}
 
-	protected boolean canFitInOther(final PositionedRectangle rectangle, final Box box) {
+	protected boolean canFitInOther(final Box box, final PositionedRectangle rectangle) {
 		return !box.wouldOverlap(rectangle);
 	}
 	// endregion
