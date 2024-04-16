@@ -21,6 +21,11 @@ public class PositionedRectangle {
 		this(rectangle, 0, 0, false);
 	}
 
+	/**
+	 * Copy constructor
+	 *
+	 * @param positionedRectangle Data to copy
+	 */
 	PositionedRectangle(final PositionedRectangle positionedRectangle) {
 		this(positionedRectangle.rectangle, positionedRectangle.x, positionedRectangle.y,
 			positionedRectangle.rotated);

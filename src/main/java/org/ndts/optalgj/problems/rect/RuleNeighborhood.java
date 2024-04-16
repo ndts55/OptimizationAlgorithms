@@ -6,6 +6,7 @@ import org.ndts.optalgj.utils.RNG;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,36 +24,44 @@ enum RuleAction {
 
 public class RuleNeighborhood extends LocalSearchNeighborhood {
 	// region Class Attributes
-	protected static final int MAX_ACTION_COUNT = 1000;
+	protected static final int MAX_ACTION_COUNT = 50;
 	protected List<PositionedRectangle> rectangles;
 	// endregion
 
 	// region Constants (but as functions)
 	@Override
-	protected long stallThreshold() {return 40;}
+	protected long stallThreshold() {return 400;}
 	// endregion
 
 	// region Better Neighbor
 	@Override
 	protected Output findBetterNeighbor(final Output initial, final double initialEvaluation,
 										final ObjectiveFunction<Output> obj) {
-		if (rectangles == null) rectangles = extractRectangles(initial);
-		final var output = new Output(initial);
-		var bestOutput = new Output(output);
-		for (var i = 0; !isCancelled() && obj.evaluate(output) >= initialEvaluation && i < MAX_ACTION_COUNT; i += 1) {
-			switch (RuleAction.values()[RNG.nextIndex(RuleAction.values().length)]) {
+		final var rectangles = extractRectangles(initial);
+		for (var i = 0; !isCancelled() && i < MAX_ACTION_COUNT; i += 1) {
+			switch (getRandomAction()) {
 				case Swap -> swapRectangles(rectangles);
 				case Move -> moveRectangles(rectangles);
 			}
-			output.boxes().clear();
-			output.boxes().addAll(constructBoxes(output.boxLength(), rectangles));
-			if (obj.evaluate(output) < obj.evaluate(bestOutput)) bestOutput = output.copy();
+			final var output = new Output(initial.boxLength(), constructBoxes(initial.boxLength(),
+				rectangles));
+			if (obj.evaluate(output) < initialEvaluation) {
+				sortOutput(output);
+				return output;
+			}
 		}
-		if (initialEvaluation >= obj.evaluate(bestOutput)) {
-			return bestOutput;
-		} else {
-			return initial;
-		}
+		return initial;
+	}
+
+	protected void sortOutput(final Output output) {
+		output.boxes().sort(Comparator.comparingInt(Box::occupiedArea));
+	}
+
+	private RuleAction getRandomAction() {
+		final var first = RuleAction.values()[RNG.nextIndex(RuleAction.values().length)];
+		final var second = RuleAction.values()[RNG.nextIndex(RuleAction.values().length)];
+		if (first == RuleAction.Swap && second == RuleAction.Swap) {return RuleAction.Swap;}
+		return RuleAction.Move;
 	}
 	// endregion
 
@@ -61,11 +70,11 @@ public class RuleNeighborhood extends LocalSearchNeighborhood {
 		// IDEAS
 		// - swap two rectangles
 		// - generate n pairs that are swapped
-		final var swapCount = RNG.nextInt(1, 5);
+		final var swapCount = RNG.nextInt(1, 3);
 		for (var i = 0; i < swapCount; i += 1) {
 			final var leftIndex = RNG.nextIndex(rectangles.size());
-			var rightIndex = RNG.nextIndex(rectangles.size());
-			while (leftIndex == rightIndex) rightIndex = RNG.nextIndex(rectangles.size());
+			final var rightIndex = RNG.nextIndex(rectangles.size());
+			if (leftIndex == rightIndex) continue;
 			Collections.swap(rectangles, leftIndex, rightIndex);
 		}
 	}
@@ -78,8 +87,7 @@ public class RuleNeighborhood extends LocalSearchNeighborhood {
 		final var moveCount = RNG.nextInt(1, 5);
 		for (var i = 0; i < moveCount; i += 1) {
 			final var srcIndex = RNG.nextIndex(rectangles.size());
-			var dstIndex = RNG.nextIndex(rectangles.size());
-			while (srcIndex == dstIndex) dstIndex = RNG.nextIndex(rectangles.size() - 1);
+			final var dstIndex = RNG.nextIndex(rectangles.size() - 1);
 			rectangles.add(dstIndex, rectangles.remove(srcIndex));
 		}
 	}
@@ -92,22 +100,21 @@ public class RuleNeighborhood extends LocalSearchNeighborhood {
 	}
 
 	protected List<Box> constructBoxes(int boxLength, List<PositionedRectangle> rectangles) {
-		final var boxes = new ArrayList<Box>(1) {{add(new Box());}};
-		var i = 0;
-		while (i < rectangles.size()) {
-			final var rectangle = rectangles.get(i);
-			// try to fit into the last box
+		final var boxes = new ArrayList<Box>() {{add(new Box());}};
+		for (var rect : rectangles) {
 			final var box = boxes.getLast();
-			if (tryToFit(box, rectangle, boxLength)) {
-				box.add(rectangle);
-				i += 1;
-			} else boxes.add(new Box());
+			if (tryToFit(box, rect, boxLength)) {
+				box.add(rect);
+			} else {
+				rect.transformTo(0, 0, false);
+				boxes.add(new Box(new ArrayList<>() {{add(rect);}}));
+			}
 		}
 		return boxes;
 	}
 
 	protected List<PositionedRectangle> extractRectangles(final Output output) {
-		return output.boxes().stream().flatMap(b -> b.rectangles().stream()).collect(Collectors.toCollection(ArrayList::new));
+		return output.boxes().stream().map(Box::new).flatMap(b -> b.rectangles().stream()).collect(Collectors.toCollection(ArrayList::new));
 	}
 	// endregion
 }

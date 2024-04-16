@@ -46,14 +46,14 @@ class RunSearch implements Callable<String> {
 			""".formatted(name, output.boxes().size(), output.usedSpace() * 100,
 			duration.toSeconds(), search.currentIteration(), output.firstBoxWithOverlap().map((
 				"Has" +
-				" Overlap at: %d")::formatted).orElse("Has No " + "Overlaps"));
+					" Overlap at: %d")::formatted).orElse("Has No " + "Overlaps"));
 	}
 }
 
 public class TestLocal {
 	private static Input newInput() {
 		int boxLength = 20;
-		return new Input(generateInstances(1000, 1, 7, 1, 7), boxLength);
+		return new Input(generateInstances(10000, 1, 7, 1, 7), boxLength);
 	}
 
 	private static ArrayList<RunSearch> getRunSearches() {
@@ -61,10 +61,10 @@ public class TestLocal {
 		return new ArrayList<>(3) {{
 			add(new RunSearch("Geometric", new LocalSearch<>(new SimpleSolutionConstructor(),
 				new BoxCountMinimization(), new GeometricNeighborhood()), input));
-			add(new RunSearch("Rule", new LocalSearch<>(new SimpleSolutionConstructor(),
-				new BoxCountMinimization(), new RuleNeighborhood()), input));
-			add(new RunSearch("Overlap", new LocalSearch<>(new SimpleSolutionConstructor(),
-				new BoxCountAndOverlaps(), new OverlapNeighborhood()), input));
+//			add(new RunSearch("Rule", new LocalSearch<>(new SimpleSolutionConstructor(),
+//				new BoxCountMinimization(), new RuleNeighborhood()), input));
+//			add(new RunSearch("Overlap", new LocalSearch<>(new SimpleSolutionConstructor(),
+//				new BoxCountAndOverlaps(), new OverlapNeighborhood()), input));
 		}};
 	}
 

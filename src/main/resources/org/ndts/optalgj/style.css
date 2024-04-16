@@ -4,6 +4,7 @@
     -fx-light-gray: #eaeaea;
     -fx-medium-gray: lightgray;
     -fx-control-height: 40;
+    -fx-focus-color: transparent
 }
 
 .root-pane {
