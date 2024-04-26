@@ -1,7 +1,11 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.nbhs;
 
 import org.ndts.optalgj.algs.ObjectiveFunction;
-import org.ndts.optalgj.utils.RNG;
+import org.ndts.optalgj.problems.rect.domain.Box;
+import org.ndts.optalgj.problems.rect.utils.Fits;
+import org.ndts.optalgj.problems.rect.domain.Output;
+import org.ndts.optalgj.problems.rect.domain.PositionedRectangle;
+import org.ndts.optalgj.problems.rect.utils.RNG;
 
 import java.util.ArrayList;
 import java.util.Collections;

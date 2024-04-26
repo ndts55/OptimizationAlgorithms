@@ -5,7 +5,16 @@ import javafx.beans.property.ReadOnlyLongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Task;
 import org.ndts.optalgj.algs.*;
-import org.ndts.optalgj.problems.rect.*;
+import org.ndts.optalgj.problems.rect.domain.Input;
+import org.ndts.optalgj.problems.rect.domain.Output;
+import org.ndts.optalgj.problems.rect.nbhs.GeometricNeighborhood;
+import org.ndts.optalgj.problems.rect.nbhs.OverlapNeighborhood;
+import org.ndts.optalgj.problems.rect.nbhs.RuleNeighborhood;
+import org.ndts.optalgj.problems.rect.objs.BoxCountAndOverlaps;
+import org.ndts.optalgj.problems.rect.objs.BoxCountMinimization;
+import org.ndts.optalgj.problems.rect.tss.PackTraversalStrategy;
+import org.ndts.optalgj.problems.rect.tss.SimpleTraversalStrategy;
+import org.ndts.optalgj.problems.rect.utils.SolutionConstructor;
 
 public class SearchTask extends Task<Output> {
 	private final OptimizationAlgorithm<Output> algorithm;
@@ -29,9 +38,9 @@ public class SearchTask extends Task<Output> {
 	public SearchTask(final GreedySearchVariant searchVariant, Input input) {
 		this(switch (searchVariant) {
 			case VariantA ->
-				new GreedySearch<>(new BoxCountMinimization(), new FillTraversalStrategy(),
-					FillTraversalStrategy.oracle(), FillTraversalStrategy.queue(),
-					FillTraversalStrategy.initialData(input));
+				new GreedySearch<>(new BoxCountMinimization(), new SimpleTraversalStrategy(),
+					SimpleTraversalStrategy.oracle(), SimpleTraversalStrategy.queue(),
+					SimpleTraversalStrategy.initialData(input));
 			case VariantB ->
 				new GreedySearch<>(new BoxCountMinimization(), new PackTraversalStrategy(),
 					PackTraversalStrategy.oracle(), PackTraversalStrategy.queue(),

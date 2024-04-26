@@ -1,4 +1,4 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.domain;
 
 import org.ndts.optalgj.algs.CopyConstructible;
 

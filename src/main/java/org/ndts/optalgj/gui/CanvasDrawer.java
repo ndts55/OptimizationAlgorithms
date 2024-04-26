@@ -2,15 +2,12 @@ package org.ndts.optalgj.gui;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import org.ndts.optalgj.problems.rect.Output;
+import org.ndts.optalgj.problems.rect.domain.Output;
 
 public class CanvasDrawer {
 	private static final double scale = 5.0;
 
 	public static void drawOutput(Output output, Canvas canvas) {
-		if (output == null || output.boxes().isEmpty()) {
-			System.out.println("EMPTY");
-		}
 		// Clear output
 		final var gc = canvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());

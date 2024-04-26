@@ -1,4 +1,4 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.domain;
 
 
 public class PositionedRectangle {

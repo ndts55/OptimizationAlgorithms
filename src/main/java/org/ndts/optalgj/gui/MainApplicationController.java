@@ -18,9 +18,9 @@ import org.controlsfx.control.RangeSlider;
 import org.ndts.optalgj.algs.AlgorithmVariant;
 import org.ndts.optalgj.algs.GreedySearchVariant;
 import org.ndts.optalgj.algs.LocalSearchVariant;
-import org.ndts.optalgj.problems.rect.Input;
-import org.ndts.optalgj.problems.rect.InstanceGenerator;
-import org.ndts.optalgj.problems.rect.Rectangle;
+import org.ndts.optalgj.problems.rect.domain.Input;
+import org.ndts.optalgj.problems.rect.utils.InstanceGenerator;
+import org.ndts.optalgj.problems.rect.domain.Rectangle;
 
 import java.text.DecimalFormat;
 

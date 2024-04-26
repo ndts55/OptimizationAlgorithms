@@ -1,6 +1,6 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.utils;
 
-import org.ndts.optalgj.utils.RNG;
+import org.ndts.optalgj.problems.rect.domain.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,8 @@
 package org.ndts.optalgj.problems.rect;
 
 import org.junit.jupiter.api.Test;
+import org.ndts.optalgj.problems.rect.domain.PositionedRectangle;
+import org.ndts.optalgj.problems.rect.domain.Rectangle;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -2,7 +2,11 @@ package integration;
 
 import org.junit.jupiter.api.Test;
 import org.ndts.optalgj.algs.LocalSearch;
-import org.ndts.optalgj.problems.rect.*;
+import org.ndts.optalgj.problems.rect.domain.Input;
+import org.ndts.optalgj.problems.rect.domain.Output;
+import org.ndts.optalgj.problems.rect.nbhs.GeometricNeighborhood;
+import org.ndts.optalgj.problems.rect.objs.BoxCountMinimization;
+import org.ndts.optalgj.problems.rect.utils.SolutionConstructor;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -13,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import static org.ndts.optalgj.problems.rect.InstanceGenerator.generateInstances;
+import static org.ndts.optalgj.problems.rect.utils.InstanceGenerator.generateInstances;
 
 class RunSearch implements Callable<String> {
 	private final String name;

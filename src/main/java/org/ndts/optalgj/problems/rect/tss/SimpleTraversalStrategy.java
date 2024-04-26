@@ -1,28 +1,30 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.tss;
 
 import org.ndts.optalgj.algs.Oracle;
 import org.ndts.optalgj.algs.TraversalStrategy;
+import org.ndts.optalgj.problems.rect.domain.*;
+import org.ndts.optalgj.problems.rect.utils.Fits;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class FillTraversalStrategy extends TraversalStrategy<Output, FillWrapper> {
-	public static Oracle<Output, FillWrapper> oracle() {
+public class SimpleTraversalStrategy extends TraversalStrategy<Output, SimpleWrapper> {
+	public static Oracle<Output, SimpleWrapper> oracle() {
 		return wrapper -> wrapper.rectangles().isEmpty();
 	}
 
-	public static Queue<FillWrapper> queue() {
+	public static Queue<SimpleWrapper> queue() {
 		return new ArrayDeque<>();
 	}
 
-	public static FillWrapper initialData(Input input) {
-		return new FillWrapper(new Output(input.boxLength()), input.rectangles());
+	public static SimpleWrapper initialData(Input input) {
+		return new SimpleWrapper(new Output(input.boxLength()), input.rectangles());
 	}
 
 	@Override
-	public List<FillWrapper> traverse(FillWrapper wrapper) {
+	public List<SimpleWrapper> traverse(SimpleWrapper wrapper) {
 		final var output = new Output(wrapper.solution());
 		final var rectangles = new ArrayList<>(wrapper.rectangles());
 		for (var box : output) {
@@ -37,7 +39,7 @@ public class FillTraversalStrategy extends TraversalStrategy<Output, FillWrapper
 			rectangles.removeAll(toRemove);
 		}
 		if (!rectangles.isEmpty()) output.boxes().add(new Box());
-		return List.of(new FillWrapper(output, rectangles));
+		return List.of(new SimpleWrapper(output, rectangles));
 	}
 
 	private boolean tryToFit(Box box, PositionedRectangle rectangle, int boxLength) {

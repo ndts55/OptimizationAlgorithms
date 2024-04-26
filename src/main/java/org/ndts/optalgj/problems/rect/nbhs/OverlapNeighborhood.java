@@ -1,4 +1,4 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.nbhs;
 
 /*
 Die geometriebasierte Nachbarschaft wird angepasst auf die Situation, dass Rechtecke sich zu einem
@@ -10,6 +10,9 @@ dafür sorgen, dass schlussendlich eine garantiert überlappungsfreie Lösung en
  */
 
 import org.ndts.optalgj.algs.ObjectiveFunction;
+import org.ndts.optalgj.problems.rect.domain.Box;
+import org.ndts.optalgj.problems.rect.domain.Output;
+import org.ndts.optalgj.problems.rect.domain.PositionedRectangle;
 
 import java.util.ArrayList;
 

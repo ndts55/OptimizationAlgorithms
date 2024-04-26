@@ -1,4 +1,9 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.utils;
+
+import org.ndts.optalgj.problems.rect.domain.Box;
+import org.ndts.optalgj.problems.rect.domain.Input;
+import org.ndts.optalgj.problems.rect.domain.Output;
+import org.ndts.optalgj.problems.rect.domain.PositionedRectangle;
 
 import java.util.ArrayList;
 import java.util.List;

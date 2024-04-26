@@ -5,8 +5,8 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.ndts.optalgj.algs.GreedySearchVariant;
 import org.ndts.optalgj.algs.LocalSearchVariant;
-import org.ndts.optalgj.problems.rect.Input;
-import org.ndts.optalgj.problems.rect.Output;
+import org.ndts.optalgj.problems.rect.domain.Input;
+import org.ndts.optalgj.problems.rect.domain.Output;
 
 public class SearchService extends Service<Output> {
 	private final SearchTask task;

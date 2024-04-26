@@ -1,6 +1,7 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.objs;
 
 import org.ndts.optalgj.algs.ObjectiveFunction;
+import org.ndts.optalgj.problems.rect.domain.Output;
 
 import java.util.stream.IntStream;
 

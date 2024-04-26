@@ -1,7 +1,8 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.nbhs;
 
 import org.ndts.optalgj.algs.Neighborhood;
 import org.ndts.optalgj.algs.ObjectiveFunction;
+import org.ndts.optalgj.problems.rect.domain.Output;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

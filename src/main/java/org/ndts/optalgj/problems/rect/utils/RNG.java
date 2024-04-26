@@ -1,4 +1,4 @@
-package org.ndts.optalgj.utils;
+package org.ndts.optalgj.problems.rect.utils;
 
 import java.util.Random;
 

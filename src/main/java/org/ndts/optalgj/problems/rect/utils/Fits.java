@@ -1,4 +1,7 @@
-package org.ndts.optalgj.problems.rect;
+package org.ndts.optalgj.problems.rect.utils;
+
+import org.ndts.optalgj.problems.rect.domain.Box;
+import org.ndts.optalgj.problems.rect.domain.PositionedRectangle;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
