@@ -10,6 +10,15 @@ import java.util.Optional;
 public record Output(int boxLength,
 					 List<Box> boxes) implements CopyConstructible<Output>, Iterable<Box> {
 	/**
+	 * (Almost) empty constructor.
+	 *
+	 * @param boxLength Length of the Box.
+	 */
+	public Output(int boxLength) {
+		this(boxLength, new ArrayList<>());
+	}
+
+	/**
 	 * Copy-constructor
 	 *
 	 * @param output Output from which to copy data.
@@ -39,10 +48,8 @@ public record Output(int boxLength,
 	}
 
 	public double usedSpace() {
-		final var totalArea =
-			(double) boxLength() * boxLength() * boxes().size();
-		final var occupiedArea =
-			(double) boxes().stream().mapToInt(Box::occupiedArea).sum();
+		final var totalArea = (double) boxLength() * boxLength() * boxes().size();
+		final var occupiedArea = (double) boxes().stream().mapToInt(Box::occupiedArea).sum();
 		return occupiedArea / totalArea;
 	}
 }

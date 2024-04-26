@@ -1,31 +1,24 @@
 package org.ndts.optalgj.algs;
 
-public class LocalSearch<Input, Output extends CopyConstructible<Output>> implements OptimizationAlgorithm<Input, Output> {
-	private final SolutionConstructor<Input, Output> solutionConstructor;
-	private final ObjectiveFunction<Output> obj;
-	private final Neighborhood<Output> neighborhood;
-	private Output currentSolution;
-	private Output bestSolution;
-	private int currentIteration = 0;
+public class LocalSearch<Solution extends CopyConstructible<Solution>> implements OptimizationAlgorithm<Solution> {
+	private final ObjectiveFunction<Solution> obj;
+	private final Neighborhood<Solution> neighborhood;
+	private Solution currentSolution;
+	private Solution bestSolution;
+	private int iteration = 0;
 
-	public LocalSearch(SolutionConstructor<Input, Output> solutionConstructor,
-					   ObjectiveFunction<Output> objectiveFunction,
-					   Neighborhood<Output> neighborhood) {
-		this.solutionConstructor = solutionConstructor;
+	public LocalSearch(ObjectiveFunction<Solution> objectiveFunction,
+					   Neighborhood<Solution> neighborhood, Solution initialSolution) {
 		this.obj = objectiveFunction;
 		this.neighborhood = neighborhood;
+		this.currentSolution = initialSolution;
+		this.bestSolution = currentSolution;
 	}
 
 	@Override
-	public void initialize(Input input) {
-		currentSolution = solutionConstructor.arbitrarySolution(input);
-		bestSolution = currentSolution;
-	}
-
-	@Override
-	public boolean iteration() {
+	public boolean iterate() {
 		currentSolution = neighborhood.betterNeighbor(currentSolution, obj);
-		currentIteration += 1;
+		iteration += 1;
 		if (currentSolution == null) return false;
 		if (obj.evaluate(currentSolution) < obj.evaluate(bestSolution))
 			bestSolution = currentSolution.copy();
@@ -38,15 +31,15 @@ public class LocalSearch<Input, Output extends CopyConstructible<Output>> implem
 	}
 
 	@Override
-	public Output bestOutput() {
+	public Solution best() {
 		return bestSolution;
 	}
 
 	@Override
-	public Output currentOutput() {
+	public Solution current() {
 		return currentSolution.copy();
 	}
 
 	@Override
-	public int currentIteration() {return currentIteration;}
+	public int iteration() {return iteration;}
 }

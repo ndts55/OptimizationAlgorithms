@@ -1,7 +1,6 @@
 package org.ndts.optalgj.problems.rect;
 
 import org.ndts.optalgj.algs.ObjectiveFunction;
-import org.ndts.optalgj.utils.Fits;
 import org.ndts.optalgj.utils.RNG;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ enum RuleAction {
 	Swap, Move
 }
 
+// TODO Improve this neighborhood so that it produces acceptable solutions
 public class RuleNeighborhood extends LocalSearchNeighborhood {
 	// region Class Attributes
 	protected static final int MAX_ACTION_COUNT = 50;

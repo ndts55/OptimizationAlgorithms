@@ -1,7 +1,6 @@
 package org.ndts.optalgj.problems.rect;
 
 import org.ndts.optalgj.algs.ObjectiveFunction;
-import org.ndts.optalgj.utils.Fits;
 import org.ndts.optalgj.utils.RNG;
 
 import java.util.ArrayList;

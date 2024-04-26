@@ -5,6 +5,7 @@ import org.ndts.optalgj.algs.ObjectiveFunction;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+// TODO implement this in Neighborhood directly, which should then be an abstract class
 public abstract class LocalSearchNeighborhood implements Neighborhood<Output> {
 	// region Attributes
 	private final AtomicBoolean cancelled = new AtomicBoolean(false);

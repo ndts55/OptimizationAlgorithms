@@ -1,27 +1,22 @@
 package org.ndts.optalgj.algs;
 
-public interface OptimizationAlgorithm<Input, Output> {
-	/**
-	 * @param input Problem instance.
-	 */
-	void initialize(Input input);
-
+public interface OptimizationAlgorithm<Solution> {
 	/**
 	 * @return Whether a better current solution was found.
 	 */
-	boolean iteration();
+	boolean iterate();
 
 	void cancel();
 
 	/**
 	 * @return Best output so far.
 	 */
-	Output bestOutput();
+	Solution best();
 
 	/**
 	 * @return Current output.
 	 */
-	Output currentOutput();
+	Solution current();
 
-	int currentIteration();
+	int iteration();
 }

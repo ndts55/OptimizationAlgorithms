@@ -17,25 +17,21 @@ import static org.ndts.optalgj.problems.rect.InstanceGenerator.generateInstances
 
 class RunSearch implements Callable<String> {
 	private final String name;
-	private final LocalSearch<Input, Output> search;
-	private final Input input;
+	private final LocalSearch<Output> search;
 
-	public RunSearch(final String name, final LocalSearch<Input, Output> search,
-					 final Input input) {
+	public RunSearch(final String name, final LocalSearch<Output> search) {
 		this.name = name;
 		this.search = search;
-		this.input = input;
 	}
 
 	@Override
 	public String call() {
-		search.initialize(input);
 		final var start = LocalDateTime.now();
 		//noinspection StatementWithEmptyBody
-		while (search.iteration()) {}
+		while (search.iterate()) {}
 		final var end = LocalDateTime.now();
 		final var duration = Duration.between(start, end);
-		final var output = search.bestOutput();
+		final var output = search.best();
 		return """
 			%s
 			Box Count: %d
@@ -44,9 +40,8 @@ class RunSearch implements Callable<String> {
 			Iterations: %d
 			Overlaps: %s
 			""".formatted(name, output.boxes().size(), output.usedSpace() * 100,
-			duration.toSeconds(), search.currentIteration(), output.firstBoxWithOverlap().map((
-				"Has" +
-					" Overlap at: %d")::formatted).orElse("Has No " + "Overlaps"));
+			duration.toSeconds(), search.iteration(), output.firstBoxWithOverlap().map(("Has" + " "
+				+ "Overlap at: %d")::formatted).orElse("Has No " + "Overlaps"));
 	}
 }
 
@@ -59,8 +54,8 @@ public class TestLocal {
 	private static ArrayList<RunSearch> getRunSearches() {
 		final var input = newInput();
 		return new ArrayList<>(3) {{
-			add(new RunSearch("Geometric", new LocalSearch<>(new SimpleSolutionConstructor(),
-				new BoxCountMinimization(), new GeometricNeighborhood()), input));
+			add(new RunSearch("Geometric", new LocalSearch<>(new BoxCountMinimization(),
+				new GeometricNeighborhood(), SolutionConstructor.forLocal(input))));
 //			add(new RunSearch("Rule", new LocalSearch<>(new SimpleSolutionConstructor(),
 //				new BoxCountMinimization(), new RuleNeighborhood()), input));
 //			add(new RunSearch("Overlap", new LocalSearch<>(new SimpleSolutionConstructor(),

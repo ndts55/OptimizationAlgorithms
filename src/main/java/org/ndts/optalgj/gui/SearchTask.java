@@ -4,39 +4,39 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.ReadOnlyLongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Task;
-import org.ndts.optalgj.algs.GreedySearchVariant;
-import org.ndts.optalgj.algs.LocalSearch;
-import org.ndts.optalgj.algs.LocalSearchVariant;
-import org.ndts.optalgj.algs.OptimizationAlgorithm;
+import org.ndts.optalgj.algs.*;
 import org.ndts.optalgj.problems.rect.*;
 
 public class SearchTask extends Task<Output> {
-	private final OptimizationAlgorithm<Input, Output> algorithm;
-	private final Input input;
+	private final OptimizationAlgorithm<Output> algorithm;
 	private final LongProperty iteration = new SimpleLongProperty(0);
 
-	public SearchTask(final OptimizationAlgorithm<Input, Output> algorithm,
-					  final Input input) {
+	public SearchTask(final OptimizationAlgorithm<Output> algorithm) {
 		this.algorithm = algorithm;
-		this.input = input;
 	}
 
 	public SearchTask(final LocalSearchVariant neighborhoodVariant, Input input) {
-		this(new LocalSearch<>(new SimpleSolutionConstructor(),
-			switch (neighborhoodVariant) {
-				case Geometric, Rules -> new BoxCountMinimization();
-				case Overlap -> new BoxCountAndOverlaps();
-			},
-			switch (neighborhoodVariant) {
-				case LocalSearchVariant.Geometric -> new GeometricNeighborhood();
-				case LocalSearchVariant.Overlap -> new OverlapNeighborhood();
-				case LocalSearchVariant.Rules -> new RuleNeighborhood();
-			}), input);
+		this(new LocalSearch<>(switch (neighborhoodVariant) {
+			case Geometric, Rules -> new BoxCountMinimization();
+			case Overlap -> new BoxCountAndOverlaps();
+		}, switch (neighborhoodVariant) {
+			case LocalSearchVariant.Geometric -> new GeometricNeighborhood();
+			case LocalSearchVariant.Overlap -> new OverlapNeighborhood();
+			case LocalSearchVariant.Rules -> new RuleNeighborhood();
+		}, SolutionConstructor.forLocal(input)));
 	}
 
-	public SearchTask(final GreedySearchVariant neighborhoodVariant, Input input) {
-		// TODO construct SearchTask for greedy search
-		throw new UnsupportedOperationException();
+	public SearchTask(final GreedySearchVariant searchVariant, Input input) {
+		this(switch (searchVariant) {
+			case VariantA ->
+				new GreedySearch<>(new BoxCountMinimization(), new FillTraversalStrategy(),
+					FillTraversalStrategy.oracle(), FillTraversalStrategy.queue(),
+					FillTraversalStrategy.initialData(input));
+			case VariantB ->
+				new GreedySearch<>(new BoxCountMinimization(), new PackTraversalStrategy(),
+					PackTraversalStrategy.oracle(), PackTraversalStrategy.queue(),
+					PackTraversalStrategy.initialData(input));
+		});
 	}
 
 	public ReadOnlyLongProperty iterationProperty() {
@@ -45,20 +45,19 @@ public class SearchTask extends Task<Output> {
 
 	@Override
 	protected Output call() {
-		algorithm.initialize(input);
-		if (isCancelled()) return algorithm.bestOutput();
+		if (isCancelled()) return algorithm.best();
 		var progressed = false;
 		do {
 			try {
-				progressed = algorithm.iteration();
+				progressed = algorithm.iterate();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			// TODO call updateValue every X ms instead of on every iteration
-			if (progressed) updateValue(algorithm.currentOutput());
-			iteration.set(algorithm.currentIteration());
+			if (progressed) updateValue(algorithm.current());
+			iteration.set(algorithm.iteration());
 		} while (!isCancelled() && progressed);
-		return algorithm.bestOutput();
+		return algorithm.best();
 	}
 
 	@Override
