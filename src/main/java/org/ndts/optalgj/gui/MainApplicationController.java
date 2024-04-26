@@ -16,8 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.controlsfx.control.RangeSlider;
 import org.ndts.optalgj.algs.AlgorithmVariant;
-import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;
-import org.ndts.optalgj.algs.LocalNeighborhoodVariant;
+import org.ndts.optalgj.algs.GreedySearchVariant;
+import org.ndts.optalgj.algs.LocalSearchVariant;
 import org.ndts.optalgj.problems.rect.Input;
 import org.ndts.optalgj.problems.rect.InstanceGenerator;
 import org.ndts.optalgj.problems.rect.Rectangle;
@@ -77,9 +77,9 @@ public class MainApplicationController {
 	@FXML
 	public ChoiceBox<AlgorithmVariant> algorithmVariant;
 	@FXML
-	public ChoiceBox<LocalNeighborhoodVariant> localNeighborhoodVariant;
+	public ChoiceBox<LocalSearchVariant> localSearchVariant;
 	@FXML
-	public ChoiceBox<GreedyNeighborhoodVariant> greedyNeighborhoodVariant;
+	public ChoiceBox<GreedySearchVariant> greedySearchVariant;
 	@FXML
 	public Label iterationCountInfo;
 	@FXML
@@ -133,8 +133,8 @@ public class MainApplicationController {
 		}
 
 		service = switch (algorithmVariant.getValue()) {
-			case Local -> new SearchService(localNeighborhoodVariant.getValue(), input);
-			case Greedy -> new SearchService(greedyNeighborhoodVariant.getValue(), input);
+			case Local -> new SearchService(localSearchVariant.getValue(), input);
+			case Greedy -> new SearchService(greedySearchVariant.getValue(), input);
 		};
 		service.valueProperty().addListener((a, b, newValue) -> drawOutput(newValue, canvas));
 		service.valueProperty().addListener((a, b, newValue) -> boxCountInfo.setText(String.valueOf(newValue.boxes().size())));
@@ -190,13 +190,13 @@ public class MainApplicationController {
 	}
 
 	private void initializeAlgorithmNeighborhood() {
-		localNeighborhoodVariant.visibleProperty().bind(Bindings.createBooleanBinding(() -> algorithmVariant.getValue() == AlgorithmVariant.Local, algorithmVariant.valueProperty()));
-		localNeighborhoodVariant.managedProperty().bind(localNeighborhoodVariant.visibleProperty());
-		greedyNeighborhoodVariant.visibleProperty().bind(Bindings.createBooleanBinding(() -> algorithmVariant.getValue() == AlgorithmVariant.Greedy, algorithmVariant.valueProperty()));
-		greedyNeighborhoodVariant.managedProperty().bind(greedyNeighborhoodVariant.visibleProperty());
+		localSearchVariant.visibleProperty().bind(Bindings.createBooleanBinding(() -> algorithmVariant.getValue() == AlgorithmVariant.Local, algorithmVariant.valueProperty()));
+		localSearchVariant.managedProperty().bind(localSearchVariant.visibleProperty());
+		greedySearchVariant.visibleProperty().bind(Bindings.createBooleanBinding(() -> algorithmVariant.getValue() == AlgorithmVariant.Greedy, algorithmVariant.valueProperty()));
+		greedySearchVariant.managedProperty().bind(greedySearchVariant.visibleProperty());
 		algorithmVariant.getSelectionModel().selectFirst();
-		localNeighborhoodVariant.getSelectionModel().selectFirst();
-		greedyNeighborhoodVariant.getSelectionModel().selectFirst();
+		localSearchVariant.getSelectionModel().selectFirst();
+		greedySearchVariant.getSelectionModel().selectFirst();
 	}
 
 	private void initializeCanvas() {

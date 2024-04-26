@@ -46,16 +46,16 @@
                         <AlgorithmVariant fx:constant="Greedy"/>
                     </ChoiceBox>
                     <Region prefHeight="15"/>
-                    <Label text="Neighborhood" prefWidth="Infinity"/>
+                    <Label text="Variant" prefWidth="Infinity"/>
                     <Region prefHeight="5"/>
-                    <ChoiceBox fx:id="localNeighborhoodVariant" maxWidth="Infinity">
-                        <LocalNeighborhoodVariant fx:constant="Geometric"/>
-                        <LocalNeighborhoodVariant fx:constant="Rules"/>
-                        <LocalNeighborhoodVariant fx:constant="Overlap"/>
+                    <ChoiceBox fx:id="localSearchVariant" maxWidth="Infinity">
+                        <LocalSearchVariant fx:constant="Geometric"/>
+                        <LocalSearchVariant fx:constant="Rules"/>
+                        <LocalSearchVariant fx:constant="Overlap"/>
                     </ChoiceBox>
-                    <ChoiceBox fx:id="greedyNeighborhoodVariant" maxWidth="Infinity">
-                        <GreedyNeighborhoodVariant fx:constant="VariantA"/>
-                        <GreedyNeighborhoodVariant fx:constant="VariantB"/>
+                    <ChoiceBox fx:id="greedySearchVariant" maxWidth="Infinity">
+                        <GreedySearchVariant fx:constant="VariantA"/>
+                        <GreedySearchVariant fx:constant="VariantB"/>
                     </ChoiceBox>
                 </VBox>
             </TitledPane>

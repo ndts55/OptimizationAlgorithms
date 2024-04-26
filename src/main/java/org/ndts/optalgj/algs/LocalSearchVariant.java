@@ -1,6 +1,6 @@
 package org.ndts.optalgj.algs;
 
-public enum LocalNeighborhoodVariant {
+public enum LocalSearchVariant {
 	Geometric,
 	Rules,
 	Overlap;

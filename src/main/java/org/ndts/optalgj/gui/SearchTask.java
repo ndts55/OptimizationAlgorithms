@@ -4,9 +4,9 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.ReadOnlyLongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Task;
-import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;
-import org.ndts.optalgj.algs.LocalNeighborhoodVariant;
+import org.ndts.optalgj.algs.GreedySearchVariant;
 import org.ndts.optalgj.algs.LocalSearch;
+import org.ndts.optalgj.algs.LocalSearchVariant;
 import org.ndts.optalgj.algs.OptimizationAlgorithm;
 import org.ndts.optalgj.problems.rect.*;
 
@@ -21,20 +21,20 @@ public class SearchTask extends Task<Output> {
 		this.input = input;
 	}
 
-	public SearchTask(final LocalNeighborhoodVariant neighborhoodVariant, Input input) {
+	public SearchTask(final LocalSearchVariant neighborhoodVariant, Input input) {
 		this(new LocalSearch<>(new SimpleSolutionConstructor(),
 			switch (neighborhoodVariant) {
 				case Geometric, Rules -> new BoxCountMinimization();
 				case Overlap -> new BoxCountAndOverlaps();
 			},
 			switch (neighborhoodVariant) {
-				case LocalNeighborhoodVariant.Geometric -> new GeometricNeighborhood();
-				case LocalNeighborhoodVariant.Overlap -> new OverlapNeighborhood();
-				case LocalNeighborhoodVariant.Rules -> new RuleNeighborhood();
+				case LocalSearchVariant.Geometric -> new GeometricNeighborhood();
+				case LocalSearchVariant.Overlap -> new OverlapNeighborhood();
+				case LocalSearchVariant.Rules -> new RuleNeighborhood();
 			}), input);
 	}
 
-	public SearchTask(final GreedyNeighborhoodVariant neighborhoodVariant, Input input) {
+	public SearchTask(final GreedySearchVariant neighborhoodVariant, Input input) {
 		// TODO construct SearchTask for greedy search
 		throw new UnsupportedOperationException();
 	}

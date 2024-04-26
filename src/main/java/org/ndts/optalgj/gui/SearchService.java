@@ -3,8 +3,8 @@ package org.ndts.optalgj.gui;
 import javafx.beans.property.ReadOnlyLongProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.ndts.optalgj.algs.GreedyNeighborhoodVariant;
-import org.ndts.optalgj.algs.LocalNeighborhoodVariant;
+import org.ndts.optalgj.algs.GreedySearchVariant;
+import org.ndts.optalgj.algs.LocalSearchVariant;
 import org.ndts.optalgj.problems.rect.Input;
 import org.ndts.optalgj.problems.rect.Output;
 
@@ -17,11 +17,11 @@ public class SearchService extends Service<Output> {
 		this.iteration = task.iterationProperty();
 	}
 
-	public SearchService(final LocalNeighborhoodVariant neighborhoodVariant, Input input) {
+	public SearchService(final LocalSearchVariant neighborhoodVariant, Input input) {
 		this(new SearchTask(neighborhoodVariant, input));
 	}
 
-	public SearchService(final GreedyNeighborhoodVariant neighborhoodVariant, Input input) {
+	public SearchService(final GreedySearchVariant neighborhoodVariant, Input input) {
 		this(new SearchTask(neighborhoodVariant, input));
 	}
 

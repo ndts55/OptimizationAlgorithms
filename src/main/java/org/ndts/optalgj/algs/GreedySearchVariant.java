@@ -1,6 +1,6 @@
 package org.ndts.optalgj.algs;
 
-public enum GreedyNeighborhoodVariant {
+public enum GreedySearchVariant {
 	VariantA,
 	VariantB;
 
