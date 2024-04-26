@@ -17,7 +17,7 @@ public class PositionedRectangle {
 		this.area = rectangle.area();
 	}
 
-	PositionedRectangle(final Rectangle rectangle) {
+	public PositionedRectangle(final Rectangle rectangle) {
 		this(rectangle, 0, 0, false);
 	}
 
