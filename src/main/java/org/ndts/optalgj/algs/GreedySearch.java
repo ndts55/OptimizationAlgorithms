@@ -3,18 +3,18 @@ package org.ndts.optalgj.algs;
 import java.util.Queue;
 
 public class GreedySearch<Solution extends CopyConstructible<Solution>,
-	Wrapper extends GreedyWrapper<Solution>> implements OptimizationAlgorithm<Solution> {
+	Node extends GreedyNode<Solution>> implements OptimizationAlgorithm<Solution> {
 	private final ObjectiveFunction<Solution> obj;
-	private final TraversalStrategy<Solution, Wrapper> traversalStrategy;
-	private final Oracle<Solution, Wrapper> oracle;
-	private final Queue<Wrapper> queue;
+	private final TraversalStrategy<Solution, Node> traversalStrategy;
+	private final Oracle<Solution, Node> oracle;
+	private final Queue<Node> queue;
 	private int iteration = 0;
 	private Solution bestSolution;
 	private Solution currentSolution;
 
 	public GreedySearch(ObjectiveFunction<Solution> obj,
-						TraversalStrategy<Solution, Wrapper> traversalStrategy, Oracle<Solution,
-		Wrapper> oracle, Queue<Wrapper> queue, Wrapper initialData) {
+						TraversalStrategy<Solution, Node> traversalStrategy, Oracle<Solution,
+		Node> oracle, Queue<Node> queue, Node initialData) {
 		this.obj = obj;
 		this.traversalStrategy = traversalStrategy;
 		this.oracle = oracle;

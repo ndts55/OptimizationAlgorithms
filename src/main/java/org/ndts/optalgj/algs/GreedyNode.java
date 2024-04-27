@@ -1,5 +1,5 @@
 package org.ndts.optalgj.algs;
 
-public interface GreedyWrapper<Solution> {
+public interface GreedyNode<Solution> {
 	Solution solution();
 }

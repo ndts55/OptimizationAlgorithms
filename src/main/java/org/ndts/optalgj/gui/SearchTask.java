@@ -12,7 +12,7 @@ import org.ndts.optalgj.problems.rect.nbhs.OverlapNeighborhood;
 import org.ndts.optalgj.problems.rect.nbhs.RuleNeighborhood;
 import org.ndts.optalgj.problems.rect.objs.BoxCountAndOverlaps;
 import org.ndts.optalgj.problems.rect.objs.BoxCountMinimization;
-import org.ndts.optalgj.problems.rect.tss.PackTraversalStrategy;
+import org.ndts.optalgj.problems.rect.tss.LegoTraversalStrategy;
 import org.ndts.optalgj.problems.rect.tss.SimpleTraversalStrategy;
 import org.ndts.optalgj.problems.rect.utils.SolutionConstructor;
 
@@ -42,9 +42,9 @@ public class SearchTask extends Task<Output> {
 					SimpleTraversalStrategy.oracle(), SimpleTraversalStrategy.queue(),
 					SimpleTraversalStrategy.initialData(input));
 			case VariantB ->
-				new GreedySearch<>(new BoxCountMinimization(), new PackTraversalStrategy(),
-					PackTraversalStrategy.oracle(), PackTraversalStrategy.queue(),
-					PackTraversalStrategy.initialData(input));
+				new GreedySearch<>(new BoxCountMinimization(), new LegoTraversalStrategy(),
+					LegoTraversalStrategy.oracle(), LegoTraversalStrategy.queue(),
+					LegoTraversalStrategy.initialData(input));
 		});
 	}
 

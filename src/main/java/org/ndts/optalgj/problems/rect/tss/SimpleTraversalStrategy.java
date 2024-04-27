@@ -10,21 +10,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class SimpleTraversalStrategy extends TraversalStrategy<Output, SimpleWrapper> {
-	public static Oracle<Output, SimpleWrapper> oracle() {
+public class SimpleTraversalStrategy extends TraversalStrategy<Output, SimpleNode> {
+	public static Oracle<Output, SimpleNode> oracle() {
 		return wrapper -> wrapper.rectangles().isEmpty();
 	}
 
-	public static Queue<SimpleWrapper> queue() {
+	public static Queue<SimpleNode> queue() {
 		return new ArrayDeque<>();
 	}
 
-	public static SimpleWrapper initialData(Input input) {
-		return new SimpleWrapper(new Output(input.boxLength()), input.rectangles());
+	public static SimpleNode initialData(Input input) {
+		return new SimpleNode(new Output(input.boxLength()), input.rectangles());
 	}
 
 	@Override
-	public List<SimpleWrapper> traverse(SimpleWrapper wrapper) {
+	public List<SimpleNode> traverse(SimpleNode wrapper) {
 		final var output = new Output(wrapper.solution());
 		final var rectangles = new ArrayList<>(wrapper.rectangles());
 		for (var box : output) {
@@ -39,7 +39,7 @@ public class SimpleTraversalStrategy extends TraversalStrategy<Output, SimpleWra
 			rectangles.removeAll(toRemove);
 		}
 		if (!rectangles.isEmpty()) output.boxes().add(new Box());
-		return List.of(new SimpleWrapper(output, rectangles));
+		return List.of(new SimpleNode(output, rectangles));
 	}
 
 	private boolean tryToFit(Box box, PositionedRectangle rectangle, int boxLength) {
