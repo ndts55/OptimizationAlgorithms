@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.ndts.optalgj.algs.LocalSearch;
 import org.ndts.optalgj.problems.rect.domain.Input;
 import org.ndts.optalgj.problems.rect.domain.Output;
-import org.ndts.optalgj.problems.rect.nbhs.GeometricNeighborhood;
+import org.ndts.optalgj.problems.rect.neighborhood.GeometricNeighborhood;
 import org.ndts.optalgj.problems.rect.objs.BoxCountMinimization;
 import org.ndts.optalgj.problems.rect.utils.SolutionConstructor;
 

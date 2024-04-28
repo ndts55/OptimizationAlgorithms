@@ -1,4 +1,4 @@
-package org.ndts.optalgj.problems.rect.tss;
+package org.ndts.optalgj.problems.rect.node;
 
 import org.ndts.optalgj.algs.GreedyNode;
 import org.ndts.optalgj.problems.rect.domain.*;

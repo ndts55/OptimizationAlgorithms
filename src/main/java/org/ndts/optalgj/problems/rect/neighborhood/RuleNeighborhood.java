@@ -1,4 +1,4 @@
-package org.ndts.optalgj.problems.rect.nbhs;
+package org.ndts.optalgj.problems.rect.neighborhood;
 
 import org.ndts.optalgj.algs.Neighborhood;
 import org.ndts.optalgj.algs.ObjectiveFunction;

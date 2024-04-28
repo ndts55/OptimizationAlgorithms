@@ -1,4 +1,4 @@
-package org.ndts.optalgj.problems.rect.nbhs;
+package org.ndts.optalgj.problems.rect.neighborhood;
 
 /*
 Die geometriebasierte Nachbarschaft wird angepasst auf die Situation, dass Rechtecke sich zu einem

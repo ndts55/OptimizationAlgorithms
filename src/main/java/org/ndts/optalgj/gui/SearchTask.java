@@ -7,12 +7,12 @@ import javafx.concurrent.Task;
 import org.ndts.optalgj.algs.*;
 import org.ndts.optalgj.problems.rect.domain.Input;
 import org.ndts.optalgj.problems.rect.domain.Output;
-import org.ndts.optalgj.problems.rect.nbhs.GeometricNeighborhood;
-import org.ndts.optalgj.problems.rect.nbhs.OverlapNeighborhood;
-import org.ndts.optalgj.problems.rect.nbhs.RuleNeighborhood;
+import org.ndts.optalgj.problems.rect.neighborhood.GeometricNeighborhood;
+import org.ndts.optalgj.problems.rect.neighborhood.OverlapNeighborhood;
+import org.ndts.optalgj.problems.rect.neighborhood.RuleNeighborhood;
+import org.ndts.optalgj.problems.rect.node.SimpleNode;
 import org.ndts.optalgj.problems.rect.objs.BoxCountAndOverlaps;
 import org.ndts.optalgj.problems.rect.objs.BoxCountMinimization;
-import org.ndts.optalgj.problems.rect.tss.SimpleNode;
 import org.ndts.optalgj.problems.rect.utils.SolutionConstructor;
 
 import java.util.ArrayDeque;
