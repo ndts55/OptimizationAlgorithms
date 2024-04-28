@@ -8,10 +8,20 @@ import java.util.List;
 import java.util.TreeSet;
 
 public record LegoNode(Output output,
-					   List<TreeSet<Rectangle>> trees) implements GreedyNode<Output> {
+					   List<TreeSet<Rectangle>> trees) implements GreedyNode<Output, LegoNode> {
 
 	@Override
 	public Output solution() {
 		return output;
+	}
+
+	@Override
+	public List<LegoNode> descend() {
+		return List.of();
+	}
+
+	@Override
+	public boolean isLeaf() {
+		return false;
 	}
 }

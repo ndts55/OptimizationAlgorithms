@@ -12,9 +12,10 @@ import org.ndts.optalgj.problems.rect.nbhs.OverlapNeighborhood;
 import org.ndts.optalgj.problems.rect.nbhs.RuleNeighborhood;
 import org.ndts.optalgj.problems.rect.objs.BoxCountAndOverlaps;
 import org.ndts.optalgj.problems.rect.objs.BoxCountMinimization;
-import org.ndts.optalgj.problems.rect.tss.LegoTraversalStrategy;
-import org.ndts.optalgj.problems.rect.tss.SimpleTraversalStrategy;
+import org.ndts.optalgj.problems.rect.tss.SimpleNode;
 import org.ndts.optalgj.problems.rect.utils.SolutionConstructor;
+
+import java.util.ArrayDeque;
 
 public class SearchTask extends Task<Output> {
 	private final OptimizationAlgorithm<Output> algorithm;
@@ -37,14 +38,9 @@ public class SearchTask extends Task<Output> {
 
 	public SearchTask(final GreedySearchVariant searchVariant, Input input) {
 		this(switch (searchVariant) {
-			case VariantA ->
-				new GreedySearch<>(new BoxCountMinimization(), new SimpleTraversalStrategy(),
-					SimpleTraversalStrategy.oracle(), SimpleTraversalStrategy.queue(),
-					SimpleTraversalStrategy.initialData(input));
-			case VariantB ->
-				new GreedySearch<>(new BoxCountMinimization(), new LegoTraversalStrategy(),
-					LegoTraversalStrategy.oracle(), LegoTraversalStrategy.queue(),
-					LegoTraversalStrategy.initialData(input));
+			case VariantA -> new GreedySearch<>(new BoxCountMinimization(), new ArrayDeque<>(),
+				new SimpleNode(input));
+			case VariantB -> throw new UnsupportedOperationException();
 		});
 	}
 
