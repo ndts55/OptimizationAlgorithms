@@ -1,10 +1,11 @@
 package org.ndts.optalgj.problems.rect.nbhs;
 
+import org.ndts.optalgj.algs.Neighborhood;
 import org.ndts.optalgj.algs.ObjectiveFunction;
 import org.ndts.optalgj.problems.rect.domain.Box;
-import org.ndts.optalgj.problems.rect.utils.Fits;
 import org.ndts.optalgj.problems.rect.domain.Output;
 import org.ndts.optalgj.problems.rect.domain.PositionedRectangle;
+import org.ndts.optalgj.problems.rect.utils.Fits;
 import org.ndts.optalgj.problems.rect.utils.RNG;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ enum RuleAction {
 }
 
 // TODO Improve this neighborhood so that it produces acceptable solutions
-public class RuleNeighborhood extends LocalSearchNeighborhood {
+public class RuleNeighborhood extends Neighborhood<Output> {
 	// region Class Attributes
 	protected static final int MAX_ACTION_COUNT = 50;
 	protected List<PositionedRectangle> rectangles;

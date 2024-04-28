@@ -1,5 +1,6 @@
 package org.ndts.optalgj.problems.rect.nbhs;
 
+import org.ndts.optalgj.algs.Neighborhood;
 import org.ndts.optalgj.algs.ObjectiveFunction;
 import org.ndts.optalgj.problems.rect.domain.Box;
 import org.ndts.optalgj.problems.rect.domain.Output;
@@ -24,7 +25,7 @@ enum GeometricAction {
 	MoveWithin, MoveBetween, Merge
 }
 
-public class GeometricNeighborhood extends LocalSearchNeighborhood {
+public class GeometricNeighborhood extends Neighborhood<Output> {
 	// region protected Attributes
 	protected final Comparator<Box> boxComparator = Comparator.comparingInt(Box::size);
 	// endregion
