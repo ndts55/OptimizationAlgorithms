@@ -86,8 +86,7 @@ public class RuleNeighborhood extends Neighborhood<Output> {
 
 	// region Utils
 	protected boolean tryToFit(Box box, PositionedRectangle rectangle, int boxLength) {
-		return Fits.tryToFit(box, rectangle, boxLength, this::isCancelled,
-			(b, r) -> !b.wouldOverlap(r));
+		return Fits.tryToFit(box, rectangle, boxLength, this::isCancelled);
 	}
 
 	protected List<Box> constructBoxes(int boxLength, List<PositionedRectangle> rectangles) {

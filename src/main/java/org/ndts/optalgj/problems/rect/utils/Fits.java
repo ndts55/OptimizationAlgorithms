@@ -7,6 +7,15 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class Fits {
+	public static boolean tryToFit(Box box, PositionedRectangle rectangle, int boxLength) {
+		return tryToFit(box, rectangle, boxLength, () -> false);
+	}
+
+	public static boolean tryToFit(Box box, PositionedRectangle rectangle, int boxLength,
+								   Supplier<Boolean> isCancelled) {
+		return tryToFit(box, rectangle, boxLength, isCancelled, (b, r) -> !b.wouldOverlap(r));
+	}
+
 	public static boolean tryToFit(Box box, PositionedRectangle rectangle, int boxLength,
 								   Supplier<Boolean> isCancelled, BiFunction<Box,
 		PositionedRectangle, Boolean> isFitting) {

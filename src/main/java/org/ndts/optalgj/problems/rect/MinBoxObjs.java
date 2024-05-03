@@ -8,7 +8,7 @@ import org.ndts.optalgj.problems.rect.domain.Output;
 import java.util.stream.IntStream;
 
 public class MinBoxObjs {
-	private static double minBoxCount(Output output) {
+	private static double boxCount(Output output) {
 		return output.boxes().size();
 	}
 
@@ -21,15 +21,15 @@ public class MinBoxObjs {
 	}
 
 	public static ObjectiveFunction<Output> regular() {
-		return MinBoxObjs::minBoxCount;
+		return MinBoxObjs::boxCount;
 	}
 
 	public static ObjectiveFunction<Output> punishOverlaps() {
-		return output -> minBoxCount(output) + 2 * rectsWithOverlapCount(output);
+		return output -> boxCount(output) + 2 * rectsWithOverlapCount(output);
 	}
 
 	public static ObjectiveFunction<Output> punishLastBoxFullness() {
-		return output -> minBoxCount(output) + lastOccupiedArea(output);
+		return output -> boxCount(output) + lastOccupiedArea(output);
 	}
 
 	public static ObjectiveFunction<Output> getRecommended(LocalSearchVariant variant) {
