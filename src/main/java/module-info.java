@@ -13,8 +13,6 @@ module org.ndts.optalgj {
 	opens org.ndts.optalgj.gui to javafx.fxml;
 	exports org.ndts.optalgj.problems.rect.neighborhood;
 	opens org.ndts.optalgj.problems.rect.neighborhood to javafx.fxml;
-	exports org.ndts.optalgj.problems.rect.objs;
-	opens org.ndts.optalgj.problems.rect.objs to javafx.fxml;
 	exports org.ndts.optalgj.problems.rect.domain;
 	opens org.ndts.optalgj.problems.rect.domain to javafx.fxml;
 	exports org.ndts.optalgj.problems.rect.utils;

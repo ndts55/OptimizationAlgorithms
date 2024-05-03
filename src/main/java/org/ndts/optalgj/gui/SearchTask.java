@@ -5,14 +5,13 @@ import javafx.beans.property.ReadOnlyLongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Task;
 import org.ndts.optalgj.algs.*;
+import org.ndts.optalgj.problems.rect.MinBoxObjs;
 import org.ndts.optalgj.problems.rect.domain.Input;
 import org.ndts.optalgj.problems.rect.domain.Output;
 import org.ndts.optalgj.problems.rect.neighborhood.GeometricNeighborhood;
 import org.ndts.optalgj.problems.rect.neighborhood.OverlapNeighborhood;
 import org.ndts.optalgj.problems.rect.neighborhood.RuleNeighborhood;
 import org.ndts.optalgj.problems.rect.node.SimpleNode;
-import org.ndts.optalgj.problems.rect.objs.BoxCountAndOverlaps;
-import org.ndts.optalgj.problems.rect.objs.BoxCountMinimization;
 import org.ndts.optalgj.problems.rect.utils.SolutionConstructor;
 
 import java.util.ArrayDeque;
@@ -25,21 +24,19 @@ public class SearchTask extends Task<Output> {
 		this.algorithm = algorithm;
 	}
 
-	public SearchTask(final LocalSearchVariant neighborhoodVariant, Input input) {
-		this(new LocalSearch<>(switch (neighborhoodVariant) {
-			case Geometric, Rules -> new BoxCountMinimization();
-			case Overlap -> new BoxCountAndOverlaps();
-		}, switch (neighborhoodVariant) {
+	public SearchTask(final LocalSearchVariant variant, Input input) {
+		this(new LocalSearch<>(MinBoxObjs.getRecommended(variant), switch (variant) {
 			case LocalSearchVariant.Geometric -> new GeometricNeighborhood();
 			case LocalSearchVariant.Overlap -> new OverlapNeighborhood();
 			case LocalSearchVariant.Rules -> new RuleNeighborhood();
 		}, SolutionConstructor.forLocal(input)));
 	}
 
-	public SearchTask(final GreedySearchVariant searchVariant, Input input) {
-		this(switch (searchVariant) {
-			case VariantA -> new GreedySearch<>(new BoxCountMinimization(), new ArrayDeque<>(),
-				new SimpleNode(input));
+	public SearchTask(final GreedySearchVariant variant, Input input) {
+		this(switch (variant) {
+			case VariantA ->
+				new GreedySearch<>(MinBoxObjs.getRecommended(variant), new ArrayDeque<>(),
+					new SimpleNode(input));
 			case VariantB -> throw new UnsupportedOperationException();
 		});
 	}

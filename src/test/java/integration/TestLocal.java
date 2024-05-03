@@ -2,10 +2,10 @@ package integration;
 
 import org.junit.jupiter.api.Test;
 import org.ndts.optalgj.algs.LocalSearch;
+import org.ndts.optalgj.problems.rect.MinBoxObjs;
 import org.ndts.optalgj.problems.rect.domain.Input;
 import org.ndts.optalgj.problems.rect.domain.Output;
 import org.ndts.optalgj.problems.rect.neighborhood.GeometricNeighborhood;
-import org.ndts.optalgj.problems.rect.objs.BoxCountMinimization;
 import org.ndts.optalgj.problems.rect.utils.SolutionConstructor;
 
 import java.time.Duration;
@@ -58,7 +58,7 @@ public class TestLocal {
 	private static ArrayList<RunSearch> getRunSearches() {
 		final var input = newInput();
 		return new ArrayList<>(3) {{
-			add(new RunSearch("Geometric", new LocalSearch<>(new BoxCountMinimization(),
+			add(new RunSearch("Geometric", new LocalSearch<>(MinBoxObjs.regular(),
 				new GeometricNeighborhood(), SolutionConstructor.forLocal(input))));
 //			add(new RunSearch("Rule", new LocalSearch<>(new SimpleSolutionConstructor(),
 //				new BoxCountMinimization(), new RuleNeighborhood()), input));
