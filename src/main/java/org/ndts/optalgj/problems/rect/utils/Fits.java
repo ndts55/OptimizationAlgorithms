@@ -15,14 +15,14 @@ public class Fits {
 		final var backupY = rectangle.y();
 		final var backupRotated = rectangle.rotated();
 		final var smallestSide = Math.min(rectangle.width(), rectangle.height());
-		final var maxIndex = boxLength - smallestSide;
+		final var maxIndex = boxLength - smallestSide + 1;
 		for (var row = 0; !isCancelled.get() && row < maxIndex; row += 1) {
 			for (var col = 0; !isCancelled.get() && col < maxIndex; col += 1) {
 				rectangle.transformTo(col, row, false);
-				if (!rectangle.outOfBounds(boxLength) && isFitting.apply(box, rectangle))
+				if (rectangle.insideBoxBounds(boxLength) && isFitting.apply(box, rectangle))
 					return true;
 				rectangle.rotate();
-				if (!rectangle.outOfBounds(boxLength) && isFitting.apply(box, rectangle))
+				if (rectangle.insideBoxBounds(boxLength) && isFitting.apply(box, rectangle))
 					return true;
 				rectangle.rotate();
 			}

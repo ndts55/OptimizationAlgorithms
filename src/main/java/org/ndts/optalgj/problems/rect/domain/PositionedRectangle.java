@@ -70,8 +70,8 @@ public class PositionedRectangle {
 	 * @param boxLength Length of the containing box.
 	 * @return Whether this PositionedRectangle is outside the bounds of its box.
 	 */
-	public boolean outOfBounds(int boxLength) {
-		return x < 0 || y < 0 || x + width() > boxLength - 1 || y + height() > boxLength - 1;
+	public boolean insideBoxBounds(int boxLength) {
+		return x >= 0 && y >= 0 && x + width() <= boxLength && y + height() <= boxLength;
 	}
 
 	/**
