@@ -8,4 +8,8 @@ public record Input(List<Rectangle> rectangles, int boxLength) {
 			if (rect.height() > boxLength || rect.width() > boxLength)
 				throw new IllegalArgumentException();
 	}
+
+	public Input(Input input) {
+		this(input.rectangles().stream().toList(), input.boxLength());
+	}
 }

@@ -26,7 +26,6 @@ enum RuleAction {
 	Swap, Move
 }
 
-// TODO Improve this neighborhood so that it produces acceptable solutions
 public class RuleNeighborhood extends Neighborhood<Output> {
 	// region Class Attributes
 	protected static final int MAX_ACTION_COUNT = 60;

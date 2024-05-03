@@ -8,8 +8,8 @@ public class PositionedRectangle {
 	private int y;
 	private boolean rotated; // without this we'd have to rotate the rectangle properties
 
-	PositionedRectangle(final Rectangle rectangle, final int x, final int y,
-						final boolean rotated) {
+	public PositionedRectangle(final Rectangle rectangle, final int x, final int y,
+							   final boolean rotated) {
 		this.rectangle = rectangle;
 		this.x = x;
 		this.y = y;
