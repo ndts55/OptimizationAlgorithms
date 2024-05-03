@@ -86,10 +86,10 @@ public class GeometricNeighborhood extends Neighborhood<Output> {
 		for (var col = 0; !isCancelled() && col < backupX; col++)
 			for (var row = 0; row < backupY; row++) {
 				rectangle.transformTo(col, row);
-				var fits = !rectangle.outOfBounds(boxLength) && canFitInSame(box, rectangleIndex);
+				var fits = rectangle.insideBoxBounds(boxLength) && canFitInSame(box, rectangleIndex);
 				if (fits) return true;
 				rectangle.rotate();
-				fits = !rectangle.outOfBounds(boxLength) && canFitInSame(box, rectangleIndex);
+				fits = rectangle.insideBoxBounds(boxLength) && canFitInSame(box, rectangleIndex);
 				if (fits) return true;
 				rectangle.rotate();
 			}
