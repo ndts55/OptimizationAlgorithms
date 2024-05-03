@@ -10,9 +10,9 @@ import org.ndts.optalgj.problems.rect.utils.RNG;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /*
 Anstelle von zulässigen Lösungen, arbeitet die lokale Suche hier auf Permutationen von Rechtecken.
@@ -29,13 +29,12 @@ enum RuleAction {
 // TODO Improve this neighborhood so that it produces acceptable solutions
 public class RuleNeighborhood extends Neighborhood<Output> {
 	// region Class Attributes
-	protected static final int MAX_ACTION_COUNT = 50;
-	protected List<PositionedRectangle> rectangles;
+	protected static final int MAX_ACTION_COUNT = 60;
 	// endregion
 
 	// region Constants (but as functions)
 	@Override
-	protected long stallThreshold() {return 400;}
+	protected long stallThreshold() {return 150;}
 	// endregion
 
 	// region Better Neighbor
@@ -43,23 +42,19 @@ public class RuleNeighborhood extends Neighborhood<Output> {
 	protected Output findBetterNeighbor(final Output initial, final double initialEvaluation,
 										final ObjectiveFunction<Output> obj) {
 		final var rectangles = extractRectangles(initial);
+		var output = new Output(initial);
 		for (var i = 0; !isCancelled() && i < MAX_ACTION_COUNT; i += 1) {
 			switch (getRandomAction()) {
 				case Swap -> swapRectangles(rectangles);
 				case Move -> moveRectangles(rectangles);
 			}
-			final var output = new Output(initial.boxLength(), constructBoxes(initial.boxLength(),
+			output = new Output(output.boxLength(), constructBoxes(output.boxLength(),
 				rectangles));
 			if (obj.evaluate(output) < initialEvaluation) {
-				sortOutput(output);
 				return output;
 			}
 		}
-		return initial;
-	}
-
-	protected void sortOutput(final Output output) {
-		output.boxes().sort(Comparator.comparingInt(Box::occupiedArea));
+		return obj.evaluate(output) == initialEvaluation ? output : initial;
 	}
 
 	private RuleAction getRandomAction() {
@@ -75,13 +70,8 @@ public class RuleNeighborhood extends Neighborhood<Output> {
 		// IDEAS
 		// - swap two rectangles
 		// - generate n pairs that are swapped
-		final var swapCount = RNG.nextInt(1, 3);
-		for (var i = 0; i < swapCount; i += 1) {
-			final var leftIndex = RNG.nextIndex(rectangles.size());
-			final var rightIndex = RNG.nextIndex(rectangles.size());
-			if (leftIndex == rightIndex) continue;
-			Collections.swap(rectangles, leftIndex, rightIndex);
-		}
+		IntStream.range(1, RNG.nextInt(1, 5)).forEach(i -> Collections.swap(rectangles,
+			RNG.nextIndex(rectangles.size()), RNG.nextIndex(rectangles.size())));
 	}
 	// endregion
 
@@ -89,12 +79,9 @@ public class RuleNeighborhood extends Neighborhood<Output> {
 	protected void moveRectangles(final List<PositionedRectangle> rectangles) {
 		// IDEAS
 		// - pick n rectangles and move them to a random index
-		final var moveCount = RNG.nextInt(1, 5);
-		for (var i = 0; i < moveCount; i += 1) {
-			final var srcIndex = RNG.nextIndex(rectangles.size());
-			final var dstIndex = RNG.nextIndex(rectangles.size() - 1);
-			rectangles.add(dstIndex, rectangles.remove(srcIndex));
-		}
+		final var rSize = rectangles.size();
+		IntStream.range(1, RNG.nextInt(1, 5)).forEach(i -> rectangles.add(RNG.nextIndex(rSize - 1)
+			, rectangles.remove(RNG.nextIndex(rSize))));
 	}
 	// endregion
 
@@ -106,13 +93,14 @@ public class RuleNeighborhood extends Neighborhood<Output> {
 
 	protected List<Box> constructBoxes(int boxLength, List<PositionedRectangle> rectangles) {
 		final var boxes = new ArrayList<Box>() {{add(new Box());}};
+		var box = boxes.getLast();
 		for (var rect : rectangles) {
-			final var box = boxes.getLast();
 			if (tryToFit(box, rect, boxLength)) {
 				box.add(rect);
 			} else {
 				rect.transformTo(0, 0, false);
 				boxes.add(new Box(new ArrayList<>() {{add(rect);}}));
+				box = boxes.getLast();
 			}
 		}
 		return boxes;
