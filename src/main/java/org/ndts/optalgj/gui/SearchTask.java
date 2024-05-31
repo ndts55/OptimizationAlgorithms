@@ -20,8 +20,10 @@ import org.ndts.optalgj.problems.rect.utils.SolutionConstructor;
 import java.util.ArrayDeque;
 
 public class SearchTask extends Task<Output> {
+	private static final long UPDATE_TIME_THRESHOLD = 150;
 	private final OptimizationAlgorithm<Output> algorithm;
 	private final LongProperty iteration = new SimpleLongProperty(0);
+	private long lastUpdate = 0;
 
 	public SearchTask(final OptimizationAlgorithm<Output> algorithm) {
 		this.algorithm = algorithm;
@@ -66,8 +68,13 @@ public class SearchTask extends Task<Output> {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			// TODO call updateValue every X ms instead of on every iteration
-			if (progressed) updateValue(algorithm.current());
+			if (progressed) {
+				final var currentMillis = System.currentTimeMillis();
+				if (currentMillis - lastUpdate > UPDATE_TIME_THRESHOLD) {
+					updateValue(algorithm.current());
+					lastUpdate = currentMillis;
+				}
+			}
 			iteration.set(algorithm.iteration());
 		} while (!isCancelled() && progressed);
 		return algorithm.best();
