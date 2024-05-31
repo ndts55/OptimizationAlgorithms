@@ -6,6 +6,7 @@ import org.ndts.optalgj.problems.rect.domain.Output;
 
 public class CanvasDrawer {
 	private static final double scale = 5.0;
+	private static final double scaledMargin = 1.5 * scale;
 
 	public static void drawOutput(Output output, Canvas canvas) {
 		// Clear output
@@ -19,14 +20,16 @@ public class CanvasDrawer {
 		}
 		// Set canvas height
 		final var boxLength = (double) output.boxLength() * scale;
-		canvas.setHeight(Math.ceil((output.boxes().size() * boxLength) / canvas.getWidth()) * boxLength);
+		final var boxLengthWithMargin = boxLength + scaledMargin * 2;
+		canvas.setHeight(Math.ceil((output.boxes().size() * boxLengthWithMargin) / canvas.getWidth()) * boxLengthWithMargin);
 		// Prepare loop
-		final int maxBoxesPerRow = (int) (canvas.getWidth() / boxLength);
+		final int maxBoxesPerRow = (int) (canvas.getWidth() / boxLengthWithMargin);
 		gc.setLineWidth(1);
+		gc.setStroke(Color.BLACK);
 		for (var i = 0; i < boxes.size(); i++) {
-			var boxStartX = (i % maxBoxesPerRow) * boxLength;
-			var boxStartY = (i / maxBoxesPerRow) * boxLength;
-			gc.setStroke(Color.BLACK);
+			var boxStartX = (i % maxBoxesPerRow) * boxLengthWithMargin + scaledMargin;
+			var boxStartY =
+				Integer.divideUnsigned(i, maxBoxesPerRow) * boxLengthWithMargin + scaledMargin;
 			gc.strokeRect(boxStartX, boxStartY, boxLength, boxLength);
 
 			var box = boxes.get(i);
