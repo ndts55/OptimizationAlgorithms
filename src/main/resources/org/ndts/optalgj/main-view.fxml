@@ -55,7 +55,9 @@
                     </ChoiceBox>
                     <ChoiceBox fx:id="greedySearchVariant" maxWidth="Infinity">
                         <GreedySearchVariant fx:constant="VariantA"/>
+                        <GreedySearchVariant fx:constant="VariantA2"/>
                         <GreedySearchVariant fx:constant="VariantB"/>
+                        <GreedySearchVariant fx:constant="VariantB2"/>
                     </ChoiceBox>
                 </VBox>
             </TitledPane>

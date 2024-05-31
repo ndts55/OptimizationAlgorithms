@@ -41,9 +41,6 @@ public class MinBoxObjs {
 	}
 
 	public static ObjectiveFunction<Output> getRecommended(GreedySearchVariant variant) {
-		return switch (variant) {
-			case VariantA -> regular();
-			case VariantB -> throw new UnsupportedOperationException();
-		};
+		return regular();
 	}
 }

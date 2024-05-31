@@ -50,10 +50,8 @@ public class PositionedRectangle {
 
 	public int overlapArea(final PositionedRectangle other) {
 		if (!overlapsWith(other)) return 0;
-		final var width = Math.min(x + width(), other.x + other.width()) - Math.max(x,
-			other.x);
-		final var height = Math.min(y + height(), other.y + other.height()) - Math.max(y,
-			other.y);
+		final var width = Math.min(x + width(), other.x + other.width()) - Math.max(x, other.x);
+		final var height = Math.min(y + height(), other.y + other.height()) - Math.max(y, other.y);
 		return width * height;
 	}
 
@@ -153,4 +151,9 @@ public class PositionedRectangle {
 	public int id() {
 		return rectangle.id();
 	}
+
+	/**
+	 * @return Inner Rectangle instance.
+	 */
+	public Rectangle rectangle() {return rectangle;}
 }

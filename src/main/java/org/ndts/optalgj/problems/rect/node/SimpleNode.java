@@ -5,17 +5,21 @@ import org.ndts.optalgj.problems.rect.domain.*;
 import org.ndts.optalgj.problems.rect.utils.Fits;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-public record SimpleNode(Output output,
-						 ArrayList<Rectangle> rectangles) implements GreedyNode<Output,
-	SimpleNode> {
+public class SimpleNode implements GreedyNode<Output, SimpleNode> {
+	protected final ArrayList<Rectangle> rectangles;
+	private final Output output;
+
+	private SimpleNode(Output output, ArrayList<Rectangle> rectangles) {
+		this.output = output;
+		this.rectangles = rectangles;
+	}
+
 	public SimpleNode(Input input) {
 		this(new Output(input.boxLength(), new ArrayList<>() {{
 			add(new Box());
 		}}), new ArrayList<>(input.rectangles()));
-		rectangles.sort(Comparator.comparingInt(Rectangle::area).reversed());
 	}
 
 	@Override
