@@ -1,0 +1,203 @@
+> Configure project :
+Project : => 'org.ndts.optalgj' Java module
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileTestJava
+> Task :mergeClasses SKIPPED
+> Task :processTestResources UP-TO-DATE
+> Task :testClasses
+Executing 20 runs. Each with the following parameters:
+- Box Length:      20
+- Rectangle Count: 1000
+- Min. Width:      1
+- Min. Height:     1
+- Max. Width:      7
+- Max. Height:     7
+Run 0
+Geometric: 6101ms	42 boxes
+Rules: 105177ms	44 boxes
+Overlap: 41020ms	42 boxes
+Simple: 87ms	39 boxes
+Simple (sorted): 181ms	39 boxes
+Lego: 55ms	41 boxes
+Lego (sorted): 17ms	39 boxes
+
+Run 1
+Geometric: 14113ms	42 boxes
+Rules: 138810ms	45 boxes
+Overlap: 37256ms	43 boxes
+Simple: 43ms	40 boxes
+Simple (sorted): 162ms	40 boxes
+Lego: 34ms	41 boxes
+Lego (sorted): 16ms	40 boxes
+
+Run 2
+Geometric: 9671ms	45 boxes
+Rules: 64631ms	48 boxes
+Overlap: 55651ms	45 boxes
+Simple: 44ms	42 boxes
+Simple (sorted): 165ms	42 boxes
+Lego: 40ms	43 boxes
+Lego (sorted): 16ms	42 boxes
+
+Run 3
+Geometric: 14877ms	44 boxes
+Rules: 151418ms	47 boxes
+Overlap: 36804ms	45 boxes
+Simple: 45ms	42 boxes
+Simple (sorted): 150ms	41 boxes
+Lego: 9ms	43 boxes
+Lego (sorted): 5ms	41 boxes
+
+Run 4
+Geometric: 15198ms	44 boxes
+Rules: 187112ms	47 boxes
+Overlap: 57732ms	44 boxes
+Simple: 36ms	42 boxes
+Simple (sorted): 159ms	41 boxes
+Lego: 20ms	43 boxes
+Lego (sorted): 5ms	41 boxes
+
+Run 5
+Geometric: 8816ms	43 boxes
+Rules: 157986ms	45 boxes
+Overlap: 45679ms	43 boxes
+Simple: 47ms	41 boxes
+Simple (sorted): 156ms	40 boxes
+Lego: 22ms	42 boxes
+Lego (sorted): 5ms	40 boxes
+
+Run 6
+Geometric: 9759ms	42 boxes
+Rules: 191800ms	44 boxes
+Overlap: 40134ms	42 boxes
+Simple: 49ms	39 boxes
+Simple (sorted): 157ms	39 boxes
+Lego: 20ms	40 boxes
+Lego (sorted): 5ms	39 boxes
+
+Run 7
+Geometric: 15222ms	42 boxes
+Rules: 99203ms	45 boxes
+Overlap: 57177ms	42 boxes
+Simple: 53ms	40 boxes
+Simple (sorted): 169ms	39 boxes
+Lego: 23ms	41 boxes
+Lego (sorted): 6ms	39 boxes
+
+Run 8
+Geometric: 14727ms	42 boxes
+Rules: 99719ms	45 boxes
+Overlap: 43606ms	42 boxes
+Simple: 43ms	40 boxes
+Simple (sorted): 164ms	39 boxes
+Lego: 36ms	41 boxes
+Lego (sorted): 5ms	39 boxes
+
+Run 9
+Geometric: 13020ms	45 boxes
+Rules: 204101ms	47 boxes
+Overlap: 53132ms	45 boxes
+Simple: 38ms	42 boxes
+Simple (sorted): 177ms	42 boxes
+Lego: 22ms	44 boxes
+Lego (sorted): 6ms	42 boxes
+
+Run 10
+Geometric: 9755ms	44 boxes
+Rules: 111579ms	47 boxes
+Overlap: 49902ms	44 boxes
+Simple: 47ms	41 boxes
+Simple (sorted): 180ms	41 boxes
+Lego: 10ms	42 boxes
+Lego (sorted): 5ms	41 boxes
+
+Run 11
+Geometric: 9268ms	44 boxes
+Rules: 52912ms	47 boxes
+Overlap: 83175ms	43 boxes
+Simple: 75ms	41 boxes
+Simple (sorted): 199ms	40 boxes
+Lego: 27ms	42 boxes
+Lego (sorted): 8ms	40 boxes
+
+Run 12
+Geometric: 11361ms	44 boxes
+Rules: 83316ms	46 boxes
+Overlap: 87266ms	43 boxes
+Simple: 60ms	41 boxes
+Simple (sorted): 209ms	41 boxes
+Lego: 13ms	42 boxes
+Lego (sorted): 8ms	41 boxes
+
+Run 13
+Geometric: 10636ms	45 boxes
+Rules: 175248ms	47 boxes
+Overlap: 79312ms	44 boxes
+Simple: 53ms	42 boxes
+Simple (sorted): 210ms	41 boxes
+Lego: 64ms	44 boxes
+Lego (sorted): 7ms	41 boxes
+
+Run 14
+Geometric: 17675ms	43 boxes
+Rules: 346527ms	46 boxes
+Overlap: 52027ms	44 boxes
+Simple: 55ms	41 boxes
+Simple (sorted): 182ms	40 boxes
+Lego: 23ms	42 boxes
+Lego (sorted): 6ms	40 boxes
+
+Run 15
+Geometric: 12592ms	43 boxes
+Rules: 204203ms	45 boxes
+Overlap: 55179ms	43 boxes
+Simple: 52ms	41 boxes
+Simple (sorted): 204ms	40 boxes
+Lego: 19ms	41 boxes
+Lego (sorted): 8ms	40 boxes
+
+Run 16
+Geometric: 11605ms	45 boxes
+Rules: 191456ms	47 boxes
+Overlap: 75245ms	44 boxes
+Simple: 52ms	42 boxes
+Simple (sorted): 219ms	41 boxes
+Lego: 23ms	43 boxes
+Lego (sorted): 8ms	41 boxes
+
+Run 17
+Geometric: 9551ms	44 boxes
+Rules: 125973ms	47 boxes
+Overlap: 80326ms	43 boxes
+Simple: 44ms	41 boxes
+Simple (sorted): 194ms	40 boxes
+Lego: 29ms	43 boxes
+Lego (sorted): 8ms	40 boxes
+
+Run 18
+Geometric: 9453ms	44 boxes
+Rules: 216427ms	46 boxes
+Overlap: 66763ms	43 boxes
+Simple: 44ms	41 boxes
+Simple (sorted): 165ms	41 boxes
+Lego: 43ms	42 boxes
+Lego (sorted): 7ms	41 boxes
+
+Run 19
+Geometric: 10128ms	42 boxes
+Rules: 142450ms	44 boxes
+Overlap: 43111ms	42 boxes
+Simple: 38ms	39 boxes
+Simple (sorted): 176ms	39 boxes
+Lego: 18ms	40 boxes
+Lego (sorted): 6ms	39 boxes
+
+Simple: 50.250000ms	40.850000 boxes
+Lego: 27.500000ms	42.000000 boxes
+Lego (sorted): 7.850000ms	40.300000 boxes
+Overlap: 57024.850000ms	43.300000 boxes
+Rules: 152502.400000ms	45.950000 boxes
+Geometric: 11676.400000ms	43.450000 boxes
+Simple (sorted): 178.900000ms	40.300000 boxes
