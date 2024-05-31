@@ -96,7 +96,7 @@
                         <Region prefHeight="15"/>
                         <Label text="Count" prefWidth="Infinity"/>
                         <Region prefHeight="5"/>
-                        <Spinner fx:id="rectangleCount" prefWidth="Infinity" styleClass="spinner">
+                        <Spinner fx:id="rectangleCount" prefWidth="Infinity" styleClass="spinner" editable="true">
                             <valueFactory>
                                 <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" initialValue="1000"
                                                                                 amountToStepBy="1">
