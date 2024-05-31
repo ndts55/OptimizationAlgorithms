@@ -24,7 +24,7 @@ public class TestGreedy {
 
 	@Test
 	public void testVariantA2() {
-		runSearch("Simple",
+		runSearch("Simple (sorted)",
 			new GreedySearch<>(MinBoxObjs.getRecommended(GreedySearchVariant.VariantA),
 				new ArrayDeque<>(), new SortedSimpleNode(getInput())));
 	}
@@ -38,7 +38,7 @@ public class TestGreedy {
 
 	@Test
 	public void testVariantB2() {
-		runSearch("Lego",
+		runSearch("Lego (sorted)",
 			new GreedySearch<>(MinBoxObjs.getRecommended(GreedySearchVariant.VariantB),
 				new ArrayDeque<>(), new SortedLegoNode(getInput())));
 	}
