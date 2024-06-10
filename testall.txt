@@ -194,10 +194,10 @@ Simple (sorted): 176ms	39 boxes
 Lego: 18ms	40 boxes
 Lego (sorted): 6ms	39 boxes
 
+Geometric: 11676.400000ms	43.450000 boxes
+Rules: 152502.400000ms	45.950000 boxes
+Overlap: 57024.850000ms	43.300000 boxes
 Simple: 50.250000ms	40.850000 boxes
+Simple (sorted): 178.900000ms	40.300000 boxes
 Lego: 27.500000ms	42.000000 boxes
 Lego (sorted): 7.850000ms	40.300000 boxes
-Overlap: 57024.850000ms	43.300000 boxes
-Rules: 152502.400000ms	45.950000 boxes
-Geometric: 11676.400000ms	43.450000 boxes
-Simple (sorted): 178.900000ms	40.300000 boxes
